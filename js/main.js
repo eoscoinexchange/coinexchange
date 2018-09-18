@@ -45,6 +45,64 @@ function getaccountinfo(accountname) {
 	})
 }
 
+function swapRow(i, k)
+
+{
+	var tb = $("#sellertablebody").find("tr");
+
+	$(tb).eq(k).insertBefore($(tb).eq(i));
+
+	$(tb).eq(i).insertAfter($(tb).eq(k));
+
+}
+
+function SortTb(col, order)
+
+{
+
+	var tb = $("#sellertablebody").find("tr");
+
+	var total = tb.length;
+	console.log('total is '+total);
+
+	//外层循环，共要进行arr.length次求最大值操作
+
+	for (var i = 0; i < total; i++)
+
+	{
+
+		//内层循环，找到第i大的元素，并将其和第i个元素交换
+
+		for (var j = i; j < total; j++)
+
+		{
+
+			var v = $(tb).eq(i).find("td").eq(col).find("p").html().split(' ')[0];
+
+			var v2 = $(tb).eq(j).find("td").eq(col).find("p").html().split(' ')[0];
+
+			console.log('v is '+v+' v2 is '+v2);
+
+			if (v > v2)
+
+			{
+
+				//交换两个元素的位置
+
+				swapRow(i, j);
+
+				tb = $("#sellertablebody").find("tr");
+
+			}
+
+		}
+
+	}
+
+	return;
+
+}
+
 function transfersell() {
 	try {
 
@@ -59,8 +117,8 @@ function transfersell() {
 			};
 
 			eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-				var priceint = 1/$("#coinpriceid").val();
-				console.log("priceint is "+priceint.toFixed(0));
+				var priceint = 1 / $("#coinpriceid").val();
+				console.log("priceint is " + priceint.toFixed(0));
 				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
@@ -90,9 +148,9 @@ function transferbuy() {
 			};
 
 			eos.contract('eosio.token', options).then(contract => {
-				console.log("seller price is "+sellerprice);
+				console.log("seller price is " + sellerprice);
 				var cointoeos = $("#eoscntid").val() * sellerprice;
-				console.log("cointoeos is "+cointoeos.toFixed(4));
+				console.log("cointoeos is " + cointoeos.toFixed(4));
 				contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
@@ -123,6 +181,8 @@ function sellorbuy(type) {
 	if (type == 1) {
 		$("#actionselldiv").show();
 		$("#actionbuydiv").hide();
+		$("#coincntid").val('');
+		$("#coinpriceid").val('');
 	} else if (type == 2) {
 		$("#actionselldiv").hide();
 		$("#actionbuydiv").show();
@@ -139,11 +199,12 @@ function wantbuy(obj) {
 		return;
 	}
 
+	$("#eoscntid").val('');
 	sellersel = $(obj).parent().parent().find('td').eq(0).html();
 	sellerprice = $(obj).parent().parent().find('td').eq(1).find("p").html().split(' ')[0];
 
-	console.log("seller is "+sellersel+ " sellerprice is "+sellerprice);
-	
+	console.log("seller is " + sellersel + " sellerprice is " + sellerprice);
+
 	sellorbuy(2);
 }
 
@@ -212,20 +273,19 @@ function sellerdel() {
 function selleradd(obj) {
 	var sellername = obj["seller_account"];
 	var sellerasset = obj["coin"];
-	var sellerprice = 1/obj["price"];
+	var sellerprice = 1 / obj["price"];
 	var sellerassetarr = sellerasset.split('.');
 	var sellerassetaccount = sellerassetarr[0];
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
 	var tritem = $("#sellertablebody").find(document.getElementById(sellername + sellerassetname));
 
-	if(sellerassetaccount == 0)
-	{
+	if (sellerassetaccount == 0) {
 		return -1;
 	}
-	
+
 	if (tritem.length == 0) {
 		var tdseller = "<td>" + sellername + "</td>";
-		
+
 		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(6) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
@@ -244,18 +304,13 @@ function selleradd(obj) {
 
 }
 
-function sellersort(obj)
-{
+function sellersort(obj) {
 	var cnt = obj.length;
 	var tmpobj = '';
-	for(var i = 0; i < cnt; i++)
-	{
-		for(var j =0; j < cnt; j++)
-		{
-			if(i != j)
-			{
-				if(obj[j]["price"] < obj[i]["price"])
-				{
+	for (var i = 0; i < cnt; i++) {
+		for (var j = 0; j < cnt; j++) {
+			if (i != j) {
+				if (obj[j]["price"] < obj[i]["price"]) {
 					tmpobj = obj[j];
 					obj[j] = obj[i];
 					obj[i] = tmpobj;
@@ -271,11 +326,13 @@ function getsellerlist() {
 			$("#logid").html(JSON.stringify(data, null, 2));
 
 			//console.log(JSON.parse(data));
-			sellersort(data["rows"]);
+			//sellersort(data["rows"]);
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
 				selleradd(data["rows"][i]);
 			}
+
+			SortTb(1);
 
 			sellerdel();
 		} else {
