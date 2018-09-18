@@ -218,8 +218,14 @@ function selleradd(obj) {
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
 	var tritem = $("#sellertablebody").find(document.getElementById(sellername + sellerassetname));
 
+	if(sellerassetaccount == 0)
+	{
+		return -1;
+	}
+	
 	if (tritem.length == 0) {
 		var tdseller = "<td>" + sellername + "</td>";
+		
 		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(6) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
