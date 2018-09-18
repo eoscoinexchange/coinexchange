@@ -58,7 +58,7 @@ function transfersell() {
 			};
 
 			eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], "2000").then(function (tx) {
+				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], $("#coinpriceid").val()).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
@@ -149,6 +149,9 @@ function sell() {
 		return -1;
 	}
 
+	if (checkprice() == -1) {
+		return -1;
+	}
 	transfersell();
 }
 
@@ -165,17 +168,28 @@ function buy() {
 }
 
 function checkcoin() {
+	var r = /^[0-9]+$/;
 	var count = $("#coincntid").val();
-	if (count % 1 != 0) {
+	if (!r.test(count)) {
 		Dialog.init("数量须为整数");
 		return -1;
 	}
 }
 
 function checkeos() {
+	var r = /^[0-9]+$/;
 	var count = $("#eoscntid").val();
-	if (count % 1 != 0) {
+	if (!r.test(count)) {
 		Dialog.init("数量须为整数");
+		return -1;
+	}
+}
+
+function checkprice() {
+	var r = /^[0-9]+$/;
+	var count = $("#coinpriceid").val();
+	if (!r.test(count)) {
+		Dialog.init("价格须为整数");
 		return -1;
 	}
 }
