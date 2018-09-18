@@ -220,7 +220,7 @@ function selleradd(obj) {
 
 	if (tritem.length == 0) {
 		var tdseller = "<td>" + sellername + "</td>";
-		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(4) + " EOS</p></td>";
+		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(6) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
 
@@ -231,7 +231,7 @@ function selleradd(obj) {
 	} else {
 		var tditem = tritem.find('td');
 		tditem.eq(0).html(sellername);
-		tditem.eq(1).find("p").text(sellerprice.toFixed(4) + " EOS");
+		tditem.eq(1).find("p").text(sellerprice.toFixed(6) + " EOS");
 		tditem.eq(2).html(sellerassetaccount);
 		tritem.attr("class", "update");
 	}
