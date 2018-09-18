@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scale=no">
+    <title>Coin Exchange</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/dialog.css" rel="stylesheet">
+    <script src="js/jquery_2.1.0.min.js"></script>
+    <script src="js/include.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/tp.js"></script>
+    <script src="js/buffer.js"></script>
+    <script src="js/eos.min.js"></script>
+    <script src="js/mDialogMin.js"></script>
+    <style>
+        #headdiv {
+            width: 100%;
+            height: 50px;
+            background: #1E90FF;
+            padding: 7px;
+        }
+
+        #actiondiv {
+            width: 100%;
+        }
+
+        #tablediv {
+            width: 100%;
+        }
+
+        #tablediv table thead th {
+            text-align: center;
+        }
+
+        #tablediv table tbody td {
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* td:nth-child(1) {
+            text-align: center;
+        }
+
+        td:nth-child(2) {
+            text-align: center;
+        }
+
+        td:nth-child(3) {
+            text-align: center;
+        }
+
+        td:nth-child(4) {
+            text-align: center;
+        }
+
+        td:nth-child(5) {
+            text-align: center;
+        }
+
+        td:nth-child(6) {
+            text-align: center;
+        } */
+
+        #login {
+            float: right;
+        }
+
+        .form {
+            margin: 20px auto;
+        }
+
+        button {
+            background-color: #1E90FF;
+            color: aliceblue;
+        }
+
+        select {
+            -webkit-appearance: none;
+            height:50px;
+        }
+        
+        input {
+            height:50px;
+        }
+        
+        .fa {
+            display: inline-block;
+            top: 32px;
+            left: 286px;
+            position: relative;
+            color: #1E90FF;
+        }
+    </style>
+</head>
+
+<body style="overflow-x:hidden">
+    <div>
+        <div id="headdiv" class="topbar fixed-top">
+            <h2 style="color:aliceblue;display:inline;">
+                Coin Exchange
+            </h2>
+            <button id="login" onclick="scatterLogin()" class="btn btn-default">
+                登录
+            </button>
+            <button id="gosellbtn" onclick="sellorbuy(1)" class="btn btn-default" style="display:none;float:right;">
+                卖
+            </button>
+            <button id="homebtn" onclick="home()" class="btn btn-default" style="display:none;float:right;">
+                首页
+            </button>
+            <p id="curaccount" style="color:aliceblue;float:right;margin-top:7px;display:inline;" hidden></p>
+
+        </div>
+        <div id="actiondiv" class="container-fluid" hidden>
+            <div id="actionselldiv" class="form row" style="width:300px;margin:100px auto;" hidden>
+                <div style="border-bottom: 1px solid #1E90FF;">
+                    <i class="fa fa-sort-down fa-lg"></i>
+                    <select id="coinname" style="border:0;width:300px;background-color:#ffffff;">
+                        <option value="itecointoken ITECOIN">ITECOIN</option>
+                    </select>
+                </div>
+                <div style="border-bottom: 1px solid #1E90FF;">
+                    <input id="coincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入数量" onchange="checkcoin()">
+                    </input>
+                </div>
+                <br />
+                <button id="sellbtn" class="btn" onclick="sell()" style="text-align: center;width:300px;">
+                    卖
+                </button>
+            </div>
+            <div id="actionbuydiv" class="form row" style="width:300px;margin:100px auto;" hidden>
+                <div style="border-bottom: 1px solid #1E90FF;">
+                    <input id="eoscntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入EOS数量" onchange="checkeos(this)">
+                    </input>
+                </div>
+                <br />
+                <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;">
+                    买
+                </button>
+            </div>
+        </div>
+        <div id="tablediv" class="container-fluid">
+            <div class="form row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>卖家</th>
+                            <th>兑换</th>
+                            <th>数量</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sellertablebody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
