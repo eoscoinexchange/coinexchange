@@ -3,6 +3,7 @@ var eos = null;
 var scatter = null;
 var loginflag = 0;
 var sellersel = '';
+var sellerprice = '';
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -58,7 +59,9 @@ function transfersell() {
 			};
 
 			eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], $("#coinpriceid").val()).then(function (tx) {
+				var priceint = 1/$("#coinpriceid").val();
+				console.log("priceint is "+priceint.toFixed(0));
+				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
@@ -87,7 +90,10 @@ function transferbuy() {
 			};
 
 			eos.contract('eosio.token', options).then(contract => {
-				contract.transfer(account.name, "cointotheeos", $("#eoscntid").val() + '.0000 EOS', sellersel).then(function (tx) {
+				console.log("seller price is "+sellerprice);
+				var cointoeos = $("#eoscntid").val() * sellerprice;
+				console.log("cointoeos is "+cointoeos.toFixed(4));
+				contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
@@ -134,8 +140,9 @@ function wantbuy(obj) {
 	}
 
 	sellersel = $(obj).parent().parent().find('td').eq(0).html();
+	sellerprice = $(obj).parent().parent().find('td').eq(1).find("p").html().split(' ')[0];
 
-	console.log("sellersel is "+sellersel);
+	console.log("seller is "+sellersel+ " sellerprice is "+sellerprice);
 	
 	sellorbuy(2);
 }
@@ -177,6 +184,7 @@ function checkcoin() {
 }
 
 function checkeos() {
+	return 0;
 	var r = /^[0-9]+$/;
 	var count = $("#eoscntid").val();
 	if (!r.test(count)) {
@@ -186,6 +194,7 @@ function checkeos() {
 }
 
 function checkprice() {
+	return 0;
 	var r = /^[0-9]+$/;
 	var count = $("#coinpriceid").val();
 	if (!r.test(count)) {
@@ -203,20 +212,15 @@ function sellerdel() {
 function selleradd(obj) {
 	var sellername = obj["seller_account"];
 	var sellerasset = obj["coin"];
-	var sellerprice = obj["price"];
+	var sellerprice = 1/obj["price"];
 	var sellerassetarr = sellerasset.split('.');
 	var sellerassetaccount = sellerassetarr[0];
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
-	console.log("sellername is " + sellername);
-	console.log("sellerprice is " + sellerprice);
-	console.log("sellerassetaccount is " + sellerassetaccount);
-	console.log("sellerassetname is " + sellerassetname);
 	var tritem = $("#sellertablebody").find(document.getElementById(sellername + sellerassetname));
-	console.log(tritem.length);
 
 	if (tritem.length == 0) {
 		var tdseller = "<td>" + sellername + "</td>";
-		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice + " " + sellerassetname + "/EOS</p></td>";
+		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(4) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
 
@@ -227,21 +231,42 @@ function selleradd(obj) {
 	} else {
 		var tditem = tritem.find('td');
 		tditem.eq(0).html(sellername);
-		tditem.eq(1).find("p").text(sellerprice + " " + sellerassetname + "/EOS");
+		tditem.eq(1).find("p").text(sellerprice.toFixed(4) + " EOS");
 		tditem.eq(2).html(sellerassetaccount);
 		tritem.attr("class", "update");
 	}
 
 }
 
+function sellersort(obj)
+{
+	var cnt = obj.length;
+	var tmpobj = '';
+	for(var i = 0; i < cnt; i++)
+	{
+		for(var j =0; j < cnt; j++)
+		{
+			if(i != j)
+			{
+				if(obj[j]["price"] < obj[i]["price"])
+				{
+					tmpobj = obj[j];
+					obj[j] = obj[i];
+					obj[i] = tmpobj;
+				}
+			}
+		}
+	}
+}
+
 function getsellerlist() {
-	eosjs.getTableRows(true, "cointotheeos", "0", "seller", function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", "0", "seller", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			$("#logid").html(JSON.stringify(data, null, 2));
 
 			//console.log(JSON.parse(data));
+			sellersort(data["rows"]);
 			var cnt = data["rows"].length;
-			console.log("cnt is " + cnt);
 			for (var i = 0; i < cnt; i++) {
 				selleradd(data["rows"][i]);
 			}

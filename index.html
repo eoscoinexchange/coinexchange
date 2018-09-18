@@ -133,7 +133,7 @@
                     </input>
                 </div>
                 <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="coinpriceid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入价格，1eos可兑换多少ITECOIN" onchange="checkprice()">
+                    <input id="coinpriceid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入出售单价，单位EOS" onchange="checkprice()">
                     </input>
                 </div>
                 <br />
@@ -143,8 +143,9 @@
             </div>
             <div id="actionbuydiv" class="form row" style="width:300px;margin:100px auto;" hidden>
                 <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="eoscntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入EOS数量" onchange="checkeos(this)">
+                    <input id="eoscntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入想购买的ITECOIN数量" onchange="checkeos(this)">
                     </input>
+                    <p id="buytipid"></p>
                 </div>
                 <br />
                 <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;">
@@ -158,7 +159,7 @@
                     <thead>
                         <tr>
                             <th>卖家</th>
-                            <th>兑换</th>
+                            <th>单价</th>
                             <th>数量</th>
                             <th>操作</th>
                         </tr>
