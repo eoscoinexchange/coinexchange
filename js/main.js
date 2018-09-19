@@ -4,6 +4,7 @@ var scatter = null;
 var loginflag = 0;
 var sellersel = '';
 var sellerprice = '';
+var tp = null;
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -162,7 +163,6 @@ function transfergetback() {
 
 function transferbuy() {
 	try {
-
 		scatter.getIdentity({
 			accounts: [network]
 		}).then(function (identity) {
@@ -173,20 +173,35 @@ function transferbuy() {
 				sign: true
 			};
 
-			eos.contract('eosio.token', options).then(contract => {
-				console.log("seller price is " + sellerprice);
-				var cointoeos = $("#eoscntid").val() * sellerprice;
-				console.log("cointoeos is " + cointoeos.toFixed(4));
-				contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
-					Dialog.init('Success!');
-					//getaccountinfo(account.name);
-				}).catch(function (e) {
+			if (tp.isConnected() == true) {
+				tp.eosTokenTransfer({
+					from: account.name,
+					to: 'cointotheeos',
+					amount: cointoeos.toFixed(4),
+					tokenName: 'EOS',
+					precision: 4,
+					contract: 'eosio.token',
+					memo: sellersel,
+				}).then(console.log).catch(function (e) {
 					e = JSON.parse(e);
 					Dialog.init('Tx failed: ' + e.error.details[0].message);
 				});
-			});
-		})
 
+			} else {
+				eos.contract('eosio.token', options).then(contract => {
+					console.log("seller price is " + sellerprice);
+					var cointoeos = $("#eoscntid").val() * sellerprice;
+					console.log("cointoeos is " + cointoeos.toFixed(4));
+					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
+						Dialog.init('Success!');
+						//getaccountinfo(account.name);
+					}).catch(function (e) {
+						e = JSON.parse(e);
+						Dialog.init('Tx failed: ' + e.error.details[0].message);
+					});
+				});
+			}
+		})
 	} catch (e) {
 		Dialog.init(e);
 	}
@@ -234,7 +249,7 @@ function wantbuy(obj) {
 	sellorbuy(2);
 }
 
-function getback(){
+function getback() {
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 	}
