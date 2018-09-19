@@ -129,7 +129,7 @@
                     </select>
                 </div>
                 <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="coincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入想出售的ITECOIN数量" onchange="checkcoin()">
+                    <input id="coincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入想出售或收回的ITECOIN数量" onchange="checkcoin()">
                     </input>
                 </div>
                 <div style="border-bottom: 1px solid #1E90FF;">
@@ -139,6 +139,10 @@
                 <br />
                 <button id="sellbtn" class="btn" onclick="sell()" style="text-align: center;width:300px;">
                     卖
+                </button>
+                <br />
+                <button id="getbackbtn" class="btn" onclick="getback()" style="text-align: center;width:300px;margin:20px auto;">
+                    收回
                 </button>
             </div>
             <div id="actionbuydiv" class="form row" style="width:300px;margin:100px auto;" hidden>

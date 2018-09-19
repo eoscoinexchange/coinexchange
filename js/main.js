@@ -63,7 +63,6 @@ function SortTb(col, order)
 	var tb = $("#sellertablebody").find("tr");
 
 	var total = tb.length;
-	console.log('total is '+total);
 
 	//外层循环，共要进行arr.length次求最大值操作
 
@@ -80,8 +79,6 @@ function SortTb(col, order)
 			var v = $(tb).eq(i).find("td").eq(col).find("p").html().split(' ')[0];
 
 			var v2 = $(tb).eq(j).find("td").eq(col).find("p").html().split(' ')[0];
-
-			console.log('v is '+v+' v2 is '+v2);
 
 			if (v > v2)
 
@@ -120,6 +117,35 @@ function transfersell() {
 				var priceint = 1 / $("#coinpriceid").val();
 				console.log("priceint is " + priceint.toFixed(0));
 				contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+		})
+
+	} catch (e) {
+		Dialog.init(e);
+	}
+}
+
+function transfergetback() {
+	try {
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
+				contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#coincntid").val()).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
@@ -206,6 +232,18 @@ function wantbuy(obj) {
 	console.log("seller is " + sellersel + " sellerprice is " + sellerprice);
 
 	sellorbuy(2);
+}
+
+function getback(){
+	if (loginflag == 0) {
+		Dialog.init("请先点击登录");
+	}
+
+	if (checkcoin() == -1) {
+		return -1;
+	}
+
+	transfergetback();
 }
 
 function sell() {
