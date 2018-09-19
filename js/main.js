@@ -113,7 +113,7 @@ function transfersell() {
 				sign: true
 			};
 			var priceint = 1 / $("#coinpriceid").val();
-			if (tp.isConnected() == true) {
+			if (tp.isConnected() == true && 0) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
@@ -123,7 +123,7 @@ function transfersell() {
 					contract: $("#coinname").val().split(' ')[0],
 					memo: priceint.toFixed(0),
 				}).then(function (data) {
-					Dialog.init('Success!');
+					//Dialog.init('Success!');
 				}).catch(function (err) {
 					Dialog.init(JSON.stringify(err));
 				});
@@ -160,7 +160,7 @@ function transfergetback() {
 				sign: true
 			};
 
-			if (tp.isConnected() == true) {
+			if (tp.isConnected() == true && 0) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
@@ -170,7 +170,7 @@ function transfergetback() {
 					contract: $("#coinname").val().split(' ')[0],
 					memo: $("#coincntid").val(),
 				}).then(function (data) {
-					Dialog.init('Success!');
+					//Dialog.init('Success!');
 				}).catch(function (err) {
 					Dialog.init(JSON.stringify(err));
 				});
@@ -206,7 +206,7 @@ function transferbuy() {
 
 			var cointoeos = $("#eoscntid").val() * sellerprice;
 
-			if (tp.isConnected() == true) {
+			if (tp.isConnected() == true && 0) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
@@ -216,7 +216,7 @@ function transferbuy() {
 					contract: 'eosio.token',
 					memo: sellersel,
 				}).then(function (data) {
-					Dialog.init('Success!');
+					//Dialog.init('Success!');
 				}).catch(function (err) {
 					Dialog.init(JSON.stringify(err));
 				});
