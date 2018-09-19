@@ -905,7 +905,7 @@ var _sendTpRequest = function(methodName, params, callback) {
 }
 
 var tp = {
-    version: '1.2.2',
+    version: '1.3.4',
     isConnected: function() {
         return !!(window.TPJSBrigeClient || (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.getDeviceId));
     },
@@ -1060,10 +1060,11 @@ var tp = {
             _sendTpRequest('sign', JSON.stringify(params), tpCallbackFun);
         });
     },
+
     // eos
     eosTokenTransfer: function(params) {
         // 必填项
-        if (!params.from || !params.to || !params.amount || !params.tokenName || !params.contract || !params.precision) {
+        if (!params.from || !params.to || !params.amount || !params.tokenName || !params.contract || params.precision === undefined) {
             throw new Error('missing params; "from", "to", "amount", "tokenName","contract", "precision" is required ');
         }
 
@@ -1217,6 +1218,27 @@ var tp = {
             _sendTpRequest('getEosTransactionRecord', JSON.stringify(params), tpCallbackFun);
 
         })
+    },
+    eosAuthSign: function(params) {
+        return new Promise(function(resolve, reject) {
+            var tpCallbackFun = _getCallbackName();
+
+            window[tpCallbackFun] = function(result) {
+                result = result.replace(/\r/ig, "").replace(/\n/ig, "");
+                try {
+                    var res = JSON.parse(result);
+                    if (res.reslut && res.data.signData) {
+                        res.data.signdata = res.data.signData;
+                        delete res.data.signData;
+                    }
+                    resolve(res);
+                } catch (e) {
+                    reject(e);
+                }
+            }
+
+            _sendTpRequest('eosAuthSign', JSON.stringify(params), tpCallbackFun);
+        });
     }
 };
 

@@ -4,7 +4,6 @@ var scatter = null;
 var loginflag = 0;
 var sellersel = '';
 var sellerprice = '';
-var tp = null;
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -173,6 +172,8 @@ function transferbuy() {
 				sign: true
 			};
 
+			var cointoeos = $("#eoscntid").val() * sellerprice;
+
 			if (tp.isConnected() == true) {
 				tp.eosTokenTransfer({
 					from: account.name,
@@ -189,9 +190,6 @@ function transferbuy() {
 
 			} else {
 				eos.contract('eosio.token', options).then(contract => {
-					console.log("seller price is " + sellerprice);
-					var cointoeos = $("#eoscntid").val() * sellerprice;
-					console.log("cointoeos is " + cointoeos.toFixed(4));
 					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
