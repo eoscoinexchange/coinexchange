@@ -113,7 +113,7 @@ function transfersell() {
 				sign: true
 			};
 			var priceint = 1 / $("#coinpriceid").val();
-			if(tp.isConnected() == true) {
+			if (tp.isConnected() == true) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
@@ -122,12 +122,13 @@ function transfersell() {
 					precision: 4,
 					contract: $("#coinname").val().split(' ')[0],
 					memo: priceint.toFixed(0),
-				}).then(console.log).catch(function (e) {
-					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				}).then(function (data) {
+					Dialog.init('Success!');
+				}).catch(function (err) {
+					Dialog.init(JSON.stringify(err));
 				});
 			} else {
-				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {					
+				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
 					contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
@@ -143,6 +144,8 @@ function transfersell() {
 		Dialog.init(e);
 	}
 }
+
+
 
 function transfergetback() {
 	try {
@@ -166,9 +169,10 @@ function transfergetback() {
 					precision: 4,
 					contract: $("#coinname").val().split(' ')[0],
 					memo: $("#coincntid").val(),
-				}).then(console.log).catch(function (e) {
-					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				}).then(function (data) {
+					Dialog.init('Success!');
+				}).catch(function (err) {
+					Dialog.init(JSON.stringify(err));
 				});
 			} else {
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
@@ -211,9 +215,10 @@ function transferbuy() {
 					precision: 4,
 					contract: 'eosio.token',
 					memo: sellersel,
-				}).then(console.log).catch(function (e) {
-					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				}).then(function (data) {
+					Dialog.init('Success!');
+				}).catch(function (err) {
+					Dialog.init(JSON.stringify(err));
 				});
 
 			} else {
