@@ -137,6 +137,7 @@ function transfersell() {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
+						console.log(e);
 						e = JSON.parse(e);
 						Dialog.init('Tx failed: ' + e.error.details[0].message);
 					});
@@ -148,8 +149,6 @@ function transfersell() {
 		Dialog.init(e);
 	}
 }
-
-
 
 function transfergetback() {
 	try {
@@ -164,7 +163,7 @@ function transfergetback() {
 				sign: true
 			};
 
-			if (tp.isConnected() == true && 0) {
+			if (tp.isConnected() == true) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
