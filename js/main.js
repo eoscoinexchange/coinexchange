@@ -107,7 +107,6 @@ function sellcoinchange()
 
 function transfersell() {
 	try {
-
 		scatter.getIdentity({
 			accounts: [network]
 		}).then(function (identity) {
@@ -118,7 +117,7 @@ function transfersell() {
 				sign: true
 			};
 			var priceint = 1 / $("#coinpriceid").val();
-			if (tp.isConnected() == true && 0) {
+			if (tp.isConnected() == true) {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
