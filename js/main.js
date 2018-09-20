@@ -4,6 +4,7 @@ var scatter = null;
 var loginflag = 0;
 var sellersel = '';
 var sellerprice = '';
+var curcointype = '';
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -97,7 +98,11 @@ function SortTb(col, order)
 	}
 
 	return;
+}
 
+function sellcoinchange()
+{
+	$("#sellcoincntid").attr("placeholder", "请输入想出售或收回的"+$("#coinname").val().split(' ')[1]+"数量");
 }
 
 function transfersell() {
@@ -117,7 +122,7 @@ function transfersell() {
 				tp.eosTokenTransfer({
 					from: account.name,
 					to: 'cointotheeos',
-					amount: $("#coincntid").val() + '.0000',
+					amount: $("#sellcoincntid").val() + '.0000',
 					tokenName: $("#coinname").val().split(' ')[1],
 					precision: 4,
 					contract: $("#coinname").val().split(' ')[0],
@@ -129,7 +134,7 @@ function transfersell() {
 				});
 			} else {
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", $("#coincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -168,7 +173,7 @@ function transfergetback() {
 					tokenName: $("#coinname").val().split(' ')[1],
 					precision: 4,
 					contract: $("#coinname").val().split(' ')[0],
-					memo: $("#coincntid").val(),
+					memo: $("#sellcoincntid").val(),
 				}).then(function (data) {
 					//Dialog.init('Success!');
 				}).catch(function (err) {
@@ -176,7 +181,7 @@ function transfergetback() {
 				});
 			} else {
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#coincntid").val()).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#sellcoincntid").val()).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -204,7 +209,7 @@ function transferbuy() {
 				sign: true
 			};
 
-			var cointoeos = $("#eoscntid").val() * sellerprice;
+			var cointoeos = $("#buycoincntid").val() * sellerprice;
 
 			if (tp.isConnected() == true && 0) {
 				tp.eosTokenTransfer({
@@ -223,7 +228,7 @@ function transferbuy() {
 
 			} else {
 				eos.contract('eosio.token', options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel+" "+curcointype).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -238,46 +243,22 @@ function transferbuy() {
 	}
 }
 
-function home() {
-	$("#tablediv").show();
-	$("#actiondiv").hide();
-
-	$("#login").css("display", "none");
-	$("#gosellbtn").css("display", "block");
-	$("#homebtn").css("display", "none");
-}
-
-function sellorbuy(type) {
-	$("#tablediv").hide();
-	$("#actiondiv").show();
-	if (type == 1) {
-		$("#actionselldiv").show();
-		$("#actionbuydiv").hide();
-		$("#coincntid").val('');
-		$("#coinpriceid").val('');
-	} else if (type == 2) {
-		$("#actionselldiv").hide();
-		$("#actionbuydiv").show();
-	}
-
-	$("#login").css("display", "none");
-	$("#gosellbtn").css("display", "none");
-	$("#homebtn").css("display", "block");
-}
-
 function wantbuy(obj) {
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
 	}
 
-	$("#eoscntid").val('');
+	$("#buycoincntid").val('');
 	sellersel = $(obj).parent().parent().find('td').eq(0).html();
 	sellerprice = $(obj).parent().parent().find('td').eq(1).find("p").html().split(' ')[0];
 
 	console.log("seller is " + sellersel + " sellerprice is " + sellerprice);
 
-	sellorbuy(2);
+	// sellorbuy(2);
+
+	$("#sellerlistid").hide();
+	$("#actionbuydiv").show();
 }
 
 function getback() {
@@ -285,7 +266,7 @@ function getback() {
 		Dialog.init("请先点击登录");
 	}
 
-	if (checkcoin() == -1) {
+	if (checksellcoin() == -1) {
 		return -1;
 	}
 
@@ -297,7 +278,7 @@ function sell() {
 		Dialog.init("请先点击登录");
 	}
 
-	if (checkcoin() == -1) {
+	if (checksellcoin() == -1) {
 		return -1;
 	}
 
@@ -312,26 +293,25 @@ function buy() {
 		Dialog.init("请先点击登录");
 	}
 
-	if (checkeos() == -1) {
+	if (checkbuycoin() == -1) {
 		return -1;
 	}
 
 	transferbuy();
 }
 
-function checkcoin() {
+function checksellcoin() {
 	var r = /^[0-9]+$/;
-	var count = $("#coincntid").val();
+	var count = $("#sellcoincntid").val();
 	if (!r.test(count)) {
 		Dialog.init("数量须为整数");
 		return -1;
 	}
 }
 
-function checkeos() {
-	return 0;
+function checkbuycoin() {
 	var r = /^[0-9]+$/;
-	var count = $("#eoscntid").val();
+	var count = $("#buycoincntid").val();
 	if (!r.test(count)) {
 		Dialog.init("数量须为整数");
 		return -1;
@@ -369,12 +349,12 @@ function selleradd(obj) {
 
 	if (tritem.length == 0) {
 		var tdseller = "<td>" + sellername + "</td>";
-
 		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(6) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
+		var tdcoinname = "<td>" + sellerassetname + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
 
-		var item = "<tr id='" + sellername + sellerassetname + "' class='update'>" + tdseller + tdprice + tdcount + tdbuy + "</tr>";
+		var item = "<tr id='" + sellername + sellerassetname + "' class='update'>" + tdseller + tdprice + tdcount + tdcoinname + tdbuy + "</tr>";
 
 		$("#sellertablebody").append(item);
 
@@ -405,7 +385,33 @@ function sellersort(obj) {
 }
 
 function getsellerlist() {
-	eosjs.getTableRows(true, "cointotheeos", "0", "seller", "", 0, -1, 10000, function (error, data) {
+	var cointype = $(".dropdown-menu .active").find('a').html();
+	console.log("cointype is "+cointype);
+	if(cointype != undefined)
+	{
+		curcointype = cointype;
+	}
+
+	if(curcointype == undefined)
+	{
+		return -1;
+	}
+
+	var index = '0';
+	if(cointype == "ITECOIN")
+	{
+		index = '0';
+	}
+	else if(cointype == "PUB")
+	{
+		index = '1';
+	}
+	else if(cointype == "TPT")
+	{
+		index = '2';
+	}
+
+	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			$("#logid").html(JSON.stringify(data, null, 2));
 
@@ -436,16 +442,30 @@ function scatterLogin() {
 	}).then(function (identity) {
 		var account = identity.accounts[0];
 		loginflag = 1;
+		console.log(account.name + " 已登录");
 		//Dialog.init(account.name + " 已登录");
 		//getaccountinfo(account.name);
-		$("#curaccount").show();
-		$("#curaccount").text(account.name);
-		$("#login").css("display", "none");
-		$("#gosellbtn").css("display", "block");
-		$("#homebtn").css("display", "none");
+		$(".nav-tabs").append("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+		$("#loginbtn").attr("disabled", true);
+		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 	}).catch(function (e) {
 		console.log(e);
 	});
+}
+
+function gohome()
+{
+	$("#"+curcointype).click();
+	$("#sellerlistid").show();
+	$("#actionbuydiv").hide();
+}
+
+function gohomefroma(obj)
+{
+	var cointype = $(obj).html();
+	$("#sellerlistid").show();
+	$("#actionbuydiv").hide();
+	$("#buycoincntid").attr("placeholder", "请输入想购买的"+cointype+"数量");
 }
 
 $(function () {
@@ -457,8 +477,6 @@ $(function () {
 	});
 	//setTimeout(scatterLogin, 3000);
 	setInterval(getsellerlist, 3000);
-})
 
-function emptycontent(obj) {
-	$(obj).html("");
-}
+	$(".dropdown-menu")
+})

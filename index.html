@@ -21,13 +21,6 @@
     <script src="js/eos.min.js"></script>
     <script src="js/mDialogMin.js"></script>
     <style>
-        #headdiv {
-            width: 100%;
-            height: 50px;
-            background: #1E90FF;
-            padding: 7px;
-        }
-
         #actiondiv {
             width: 100%;
         }
@@ -104,73 +97,109 @@
 
 <body style="overflow-x:hidden">
     <div>
-        <div id="headdiv" class="topbar fixed-top">
-            <h2 style="color:aliceblue;display:inline;">
-                Coin Exchange
-            </h2>
-            <button id="login" onclick="scatterLogin()" class="btn btn-default">
-                登录
-            </button>
-            <button id="gosellbtn" onclick="sellorbuy(1)" class="btn btn-default" style="display:none;float:right;">
-                卖
-            </button>
-            <button id="homebtn" onclick="home()" class="btn btn-default" style="display:none;float:right;">
-                首页
-            </button>
-            <p id="curaccount" style="color:aliceblue;float:right;margin-top:7px;display:inline;" hidden></p>
-
-        </div>
-        <div id="actiondiv" class="container-fluid" hidden>
-            <div id="actionselldiv" class="form row" style="width:300px;margin:100px auto;" hidden>
-                <div style="border-bottom: 1px solid #1E90FF;">
-                    <i class="fa fa-sort-down fa-lg"></i>
-                    <select id="coinname" style="border:0;width:300px;background-color:#ffffff;">
-                        <option value="itecointoken ITECOIN">ITECOIN</option>
-                    </select>
+        <nav id="headdiv" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
+                        <span class="sr-only">切换导航</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" style="font-size: 23px;font-weight: bold;color:#1E90FF;font-family: 'Courier New', Courier, monospace;">
+                        Coin Exchange
+                    </a>
                 </div>
-                <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="coincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入想出售或收回的ITECOIN数量" onchange="checkcoin()">
-                    </input>
+                <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                    <ul class="nav navbar-nav nav-tabs">
+                        <!-- <li><a href="#actiondiv" data-toggle="tab" style="font-size: 19px;">卖</a></li> -->
+                        <li class="dropdown active">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 19px;">
+                                买 <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="divider"></li>
+                                <li class="active"><a href="#tablediv" data-toggle="tab" id="ITECOIN" onclick="gohomefroma(this)">ITECOIN</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#tablediv" data-toggle="tab" id="PUB" onclick="gohomefroma(this)">PUB</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#tablediv" data-toggle="tab" id="TPT" onclick="gohomefroma(this)">TPT</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="navbar-form navbar-right" role="search">
+                        <button type="btn" class="btn btn-default" onclick="scatterLogin()" id="loginbtn">
+                            登录
+                        </button>
+                    </div>
                 </div>
-                <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="coinpriceid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入出售单价，单位EOS" onchange="checkprice()">
-                    </input>
-                </div>
-                <br />
-                <button id="sellbtn" class="btn" onclick="sell()" style="text-align: center;width:300px;">
-                    卖
-                </button>
-                <br />
-                <button id="getbackbtn" class="btn" onclick="getback()" style="text-align: center;width:300px;margin:20px auto;">
-                    收回
-                </button>
             </div>
-            <div id="actionbuydiv" class="form row" style="width:300px;margin:100px auto;" hidden>
-                <div style="border-bottom: 1px solid #1E90FF;">
-                    <input id="eoscntid" type="text" style="border:0;text-align: left;width:300px;outline:none;" placeholder="请输入想购买的ITECOIN数量" onchange="checkeos(this)">
-                    </input>
-                    <p id="buytipid"></p>
+        </nav>
+        <div class="tab-content">
+            <div id="actiondiv" class="tab-pane container-fluid">
+                <div id="actionselldiv" class="form row" style="width:300px;margin:100px auto;">
+                    <div style="border-bottom: 1px solid #1E90FF;">
+                        <i class="fa fa fa-sort-down fa-lg"></i>
+                        <select id="coinname" style="border:0;width:300px;background-color:#ffffff;" onchange="sellcoinchange()">
+                            <option value="itecointoken ITECOIN">ITECOIN</option>
+                            <option value="tokendapppub PUB">PUB</option>
+                            <option value="tokendapppub TPT">TPT</option>
+                        </select>
+                    </div>
+                    <div style="border-bottom: 1px solid #1E90FF;">
+                        <input id="sellcoincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                            placeholder="请输入想出售或收回的ITECOIN数量" onchange="checksellcoin()">
+                        </input>
+                    </div>
+                    <div style="border-bottom: 1px solid #1E90FF;">
+                        <input id="coinpriceid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                            placeholder="请输入出售单价，单位EOS" onchange="checkprice()">
+                        </input>
+                    </div>
+                    <br />
+                    <button id="sellbtn" class="btn" onclick="sell()" style="text-align: center;width:300px;margin:10px auto;">
+                        卖
+                    </button>
+                    <br />
+                    <button id="getbackbtn" class="btn" onclick="getback()" style="text-align: center;width:300px;margin:10px auto;">
+                        收回
+                    </button>
+                    <button id="gohomebtn" class="btn" onclick="gohome()" style="text-align: center;width:300px;margin:10px auto;">
+                        回到首页
+                    </button>
                 </div>
-                <br />
-                <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;">
-                    买
-                </button>
             </div>
-        </div>
-        <div id="tablediv" class="container-fluid">
-            <div class="form row">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>卖家</th>
-                            <th>单价</th>
-                            <th>数量</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sellertablebody">
-                    </tbody>
-                </table>
+            <div id="tablediv" class="tab-pane container-fluid active">
+                <div id="sellerlistid" class="form row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>卖家</th>
+                                <th>单价</th>
+                                <th>数量</th>
+                                <th>币种</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellertablebody">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="actionbuydiv" class="form row" style="width:300px;margin:100px auto;" hidden>
+                        <div style="border-bottom: 1px solid #1E90FF;">
+                            <input id="buycoincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                                placeholder="请输入想购买的ITECOIN数量" onchange="checkbuycoin(this)">
+                            </input>
+                            <p id="buytipid"></p>
+                        </div>
+                        <br />
+                        <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;margin:10px auto;">
+                            买
+                        </button>
+                        <button id="gohomebtn" class="btn" onclick="gohome()" style="text-align: center;width:300px;margin:10px auto;">
+                                回到首页
+                        </button>
+                </div>
             </div>
         </div>
     </div>
