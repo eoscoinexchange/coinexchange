@@ -154,42 +154,28 @@ function transfersell() {
 
 function transfergetback() {
 	try {
-		if (tp.isConnected() == true) {
-			tp.eosTokenTransfer({
-				from: $("#loginbtn").html(),
-				to: 'cointotheeos',
-				amount: '0.0001',
-				tokenName: $("#coinname").val().split(' ')[1],
-				precision: 4,
-				contract: $("#coinname").val().split(' ')[0],
-				memo: $("#sellcoincntid").val(),
-			}).then(function (data) {
-				//Dialog.init('Success!');
-			}).catch(function (err) {
-				Dialog.init(JSON.stringify(err));
-			});
-		} else {
-			scatter.getIdentity({
-				accounts: [network]
-			}).then(function (identity) {
-				var account = identity.accounts[0];
-				var options = {
-					authorization: account.name + '@' + account.authority,
-					broadcast: true,
-					sign: true
-				};
-				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#sellcoincntid").val(), options).then(function (tx) {
-						Dialog.init('Success!');
-						//getaccountinfo(account.name);
-					}).catch(function (e) {
-						e = JSON.parse(e);
-						Dialog.init('Tx failed: ' + e.error.details[0].message);
-					});
-				});
 
-			})
-		}
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+			eos.contract('cointotheeos', options).then(contract => {
+				contract.takeback(account.name, $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+
+		})
+
 	} catch (e) {
 		Dialog.init(e);
 	}
