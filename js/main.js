@@ -347,7 +347,7 @@ function selleradd(obj) {
 
 	if (tritem.length == 0) {
 		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
-		var tdprice = "<td><p >" + sellerprice.toFixed(6) + "</p></td>";
+		var tdprice = "<td><p >" + sellerprice.toFixed(6) + " EOS</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdcoinname = "<td>" + sellerassetname + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
