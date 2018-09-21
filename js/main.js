@@ -346,13 +346,13 @@ function selleradd(obj) {
 	}
 
 	if (tritem.length == 0) {
-		var tdseller = "<td>" + sellername + "</td>";
-		var tdprice = "<td><p style='font-size:80%;'>" + sellerprice.toFixed(6) + " EOS</p></td>";
+		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
+		var tdprice = "<td><p >" + sellerprice.toFixed(6) + "</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdcoinname = "<td>" + sellerassetname + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
 
-		var item = "<tr id='" + sellername + sellerassetname + "' class='update'>" + tdseller + tdprice + tdcount + tdcoinname + tdbuy + "</tr>";
+		var item = "<tr style='font-size:80%;' id='" + sellername + sellerassetname + "' class='update'>" + tdseller + tdprice + tdcount + tdcoinname + tdbuy + "</tr>";
 
 		$("#sellertablebody").append(item);
 
