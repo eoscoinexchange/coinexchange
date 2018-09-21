@@ -100,40 +100,40 @@ function SortTb(col, order)
 	return;
 }
 
-function sellcoinchange()
-{
-	$("#sellcoincntid").attr("placeholder", "请输入想出售或收回的"+$("#coinname").val().split(' ')[1]+"数量");
+function sellcoinchange() {
+	$("#sellcoincntid").attr("placeholder", "请输入想出售或收回的" + $("#coinname").val().split(' ')[1] + "数量");
 }
 
 function transfersell() {
 	try {
-		scatter.getIdentity({
-			accounts: [network]
-		}).then(function (identity) {
-			var account = identity.accounts[0];
-			var options = {
-				authorization: account.name + '@' + account.authority,
-				broadcast: true,
-				sign: true
-			};
-			var priceint = 1 / $("#coinpriceid").val();
-			if (tp.isConnected() == true) {
-				tp.eosTokenTransfer({
-					from: account.name,
-					to: 'cointotheeos',
-					amount: $("#sellcoincntid").val() + '.0000',
-					tokenName: $("#coinname").val().split(' ')[1],
-					precision: 4,
-					contract: $("#coinname").val().split(' ')[0],
-					memo: priceint.toFixed(0),
-				}).then(function (data) {
-					//Dialog.init('Success!');
-				}).catch(function (err) {
-					Dialog.init(JSON.stringify(err));
-				});
-			} else {
+		var priceint = 1 / $("#coinpriceid").val();
+		if (tp.isConnected() == true) {
+			tp.eosTokenTransfer({
+				from: $("#loginbtn").html(),
+				to: 'cointotheeos',
+				amount: $("#sellcoincntid").val() + '.0000',
+				tokenName: $("#coinname").val().split(' ')[1],
+				precision: 4,
+				contract: $("#coinname").val().split(' ')[0],
+				memo: priceint.toFixed(0),
+			}).then(function (data) {
+				//Dialog.init('Success!');
+			}).catch(function (err) {
+				Dialog.init(JSON.stringify(err));
+			});
+		} else {
+			scatter.getIdentity({
+				accounts: [network]
+			}).then(function (identity) {
+				var account = identity.accounts[0];
+				var options = {
+					authorization: account.name + '@' + account.authority,
+					broadcast: true,
+					sign: true
+				};
+
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0)).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0), options).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -142,44 +142,44 @@ function transfersell() {
 						Dialog.init('Tx failed: ' + e.error.details[0].message);
 					});
 				});
-			}
-		})
 
+			})
+		}
 	} catch (e) {
 		Dialog.init(e);
 	}
+
+
 }
 
 function transfergetback() {
 	try {
-
-		scatter.getIdentity({
-			accounts: [network]
-		}).then(function (identity) {
-			var account = identity.accounts[0];
-			var options = {
-				authorization: account.name + '@' + account.authority,
-				broadcast: true,
-				sign: true
-			};
-
-			if (tp.isConnected() == true) {
-				tp.eosTokenTransfer({
-					from: account.name,
-					to: 'cointotheeos',
-					amount: '0.0001',
-					tokenName: $("#coinname").val().split(' ')[1],
-					precision: 4,
-					contract: $("#coinname").val().split(' ')[0],
-					memo: $("#sellcoincntid").val(),
-				}).then(function (data) {
-					//Dialog.init('Success!');
-				}).catch(function (err) {
-					Dialog.init(JSON.stringify(err));
-				});
-			} else {
+		if (tp.isConnected() == true) {
+			tp.eosTokenTransfer({
+				from: $("#loginbtn").html(),
+				to: 'cointotheeos',
+				amount: '0.0001',
+				tokenName: $("#coinname").val().split(' ')[1],
+				precision: 4,
+				contract: $("#coinname").val().split(' ')[0],
+				memo: $("#sellcoincntid").val(),
+			}).then(function (data) {
+				//Dialog.init('Success!');
+			}).catch(function (err) {
+				Dialog.init(JSON.stringify(err));
+			});
+		} else {
+			scatter.getIdentity({
+				accounts: [network]
+			}).then(function (identity) {
+				var account = identity.accounts[0];
+				var options = {
+					authorization: account.name + '@' + account.authority,
+					broadcast: true,
+					sign: true
+				};
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#sellcoincntid").val()).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", '0.0001 ' + $("#coinname").val().split(' ')[1], $("#sellcoincntid").val(), options).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -187,9 +187,9 @@ function transfergetback() {
 						Dialog.init('Tx failed: ' + e.error.details[0].message);
 					});
 				});
-			}
-		})
 
+			})
+		}
 	} catch (e) {
 		Dialog.init(e);
 	}
@@ -197,36 +197,34 @@ function transfergetback() {
 
 function transferbuy() {
 	try {
-		scatter.getIdentity({
-			accounts: [network]
-		}).then(function (identity) {
-			var account = identity.accounts[0];
-			var options = {
-				authorization: account.name + '@' + account.authority,
-				broadcast: true,
-				sign: true
-			};
+		var cointoeos = $("#buycoincntid").val() * sellerprice;
+		if (tp.isConnected() == true && 0) {
+			tp.eosTokenTransfer({
+				from: $("#loginbtn").html(),
+				to: 'cointotheeos',
+				amount: cointoeos.toFixed(4),
+				tokenName: 'EOS',
+				precision: 4,
+				contract: 'eosio.token',
+				memo: sellersel,
+			}).then(function (data) {
+				//Dialog.init('Success!');
+			}).catch(function (err) {
+				Dialog.init(JSON.stringify(err));
+			});
+		} else {
+			scatter.getIdentity({
+				accounts: [network]
+			}).then(function (identity) {
+				var account = identity.accounts[0];
+				var options = {
+					authorization: account.name + '@' + account.authority,
+					broadcast: true,
+					sign: true
+				};
 
-			var cointoeos = $("#buycoincntid").val() * sellerprice;
-
-			if (tp.isConnected() == true && 0) {
-				tp.eosTokenTransfer({
-					from: account.name,
-					to: 'cointotheeos',
-					amount: cointoeos.toFixed(4),
-					tokenName: 'EOS',
-					precision: 4,
-					contract: 'eosio.token',
-					memo: sellersel,
-				}).then(function (data) {
-					//Dialog.init('Success!');
-				}).catch(function (err) {
-					Dialog.init(JSON.stringify(err));
-				});
-
-			} else {
 				eos.contract('eosio.token', options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel+" "+curcointype).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel + " " + curcointype, options).then(function (tx) {
 						Dialog.init('Success!');
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -234,8 +232,8 @@ function transferbuy() {
 						Dialog.init('Tx failed: ' + e.error.details[0].message);
 					});
 				});
-			}
-		})
+			})
+		}
 	} catch (e) {
 		Dialog.init(e);
 	}
@@ -384,32 +382,23 @@ function sellersort(obj) {
 
 function getsellerlist() {
 	var cointype = $(".dropdown-menu .active").find('a').html();
-	console.log("cointype is "+cointype);
-	if(cointype != undefined)
-	{
+	console.log("cointype is " + cointype);
+	if (cointype != undefined) {
 		curcointype = cointype;
 	}
 
-	if(curcointype == undefined)
-	{
+	if (curcointype == undefined) {
 		return -1;
 	}
 
 	var index = '0';
-	if(cointype == "ITECOIN")
-	{
+	if (cointype == "ITECOIN") {
 		index = '0';
-	}
-	else if(cointype == "PUB")
-	{
+	} else if (cointype == "PUB") {
 		index = '1';
-	}
-	else if(cointype == "TPT")
-	{
+	} else if (cointype == "TPT") {
 		index = '2';
-	}
-	else if(cointype == "BT")
-	{
+	} else if (cointype == "BT") {
 		index = '3';
 	}
 
@@ -455,19 +444,17 @@ function scatterLogin() {
 	});
 }
 
-function gohome()
-{
-	$("#"+curcointype).click();
+function gohome() {
+	$("#" + curcointype).click();
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
 }
 
-function gohomefroma(obj)
-{
+function gohomefroma(obj) {
 	var cointype = $(obj).html();
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
-	$("#buycoincntid").attr("placeholder", "请输入想购买的"+cointype+"数量");
+	$("#buycoincntid").attr("placeholder", "请输入想购买的" + cointype + "数量");
 }
 
 $(function () {
