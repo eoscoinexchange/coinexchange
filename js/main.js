@@ -408,6 +408,10 @@ function getsellerlist() {
 	{
 		index = '2';
 	}
+	else if(cointype == "BT")
+	{
+		index = '3';
+	}
 
 	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
