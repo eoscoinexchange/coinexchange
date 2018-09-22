@@ -345,6 +345,40 @@ function sellerdel() {
 	$("#sellertablebody").find("tr").attr("class", "old");
 }
 
+function dealadd(obj) {
+	var buyername = obj["buyer_account"];
+	var sellername = obj["seller_account"];
+	var sellerasset = obj["coin"];
+	var sellerprice = 1 / obj["price"];
+	var sellerassetarr = sellerasset.split('.');
+	var sellerassetaccount = sellerassetarr[0];
+	var sellerassetname = sellerassetarr[1].split(' ')[1];
+	var dealindex = obj["pkey"];
+	var tritem = $("#deallistbody").find(document.getElementById(dealindex));
+
+	if (sellerassetaccount == 0) {
+		return -1;
+	}
+
+	if (tritem.length == 0) {
+		var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
+		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
+		var tdprice = "<td><p >" + sellerprice.toFixed(6) + " EOS</p></td>";
+		var tdcount = "<td>" + sellerassetaccount + " "+sellerassetname + "</td>";
+		var item = "<tr style='font-size:80%;' id='"+dealindex+"' class='update'>" + tdbuyer + tdseller + tdprice + tdcount+"</tr>";
+
+		$("#deallistbody").prepend(item);
+	} else {
+		tritem.attr("class", "update");
+	}
+}
+
+function dealdel() {
+	$("#deallistbody").find("tr").filter(".old").remove();
+
+	$("#deallistbody").find("tr").attr("class", "old");
+}
+
 function selleradd(obj) {
 	var sellername = obj["seller_account"];
 	var sellerasset = obj["coin"];
@@ -422,8 +456,6 @@ function getsellerlist() {
 
 	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
-			$("#logid").html(JSON.stringify(data, null, 2));
-
 			//console.log(JSON.parse(data));
 			//sellersort(data["rows"]);
 			var cnt = data["rows"].length;
@@ -434,6 +466,23 @@ function getsellerlist() {
 			SortTb(1);
 
 			sellerdel();
+		} else {
+			console.log(error);
+		}
+	})
+}
+
+function getdeallist() {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "buyrecords", "", 0, -1, 10000, function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			for (var i = 0; i < cnt; i++) {
+				dealadd(data["rows"][i]);
+			}
+
+			//SortTb(1);
+
+			dealdel();
 		} else {
 			console.log(error);
 		}
@@ -454,7 +503,8 @@ function scatterLogin() {
 		console.log(account.name + " 已登录");
 		//Dialog.init(account.name + " 已登录");
 		//getaccountinfo(account.name);
-		$(".nav-tabs").append("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+		$("#dealli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+		$("#buyli").show();
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
@@ -486,6 +536,6 @@ $(function () {
 	});
 	//setTimeout(scatterLogin, 3000);
 	setInterval(getsellerlist, 3000);
-
+	setInterval(getdeallist, 3000);
 	$(".dropdown-menu")
 })
