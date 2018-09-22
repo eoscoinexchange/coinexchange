@@ -144,6 +144,7 @@ function transfersell() {
 				memo: priceint.toFixed(0),
 			}).then(function (data) {
 				//Dialog.init('Success!');
+				sellcoinchange();
 			}).catch(function (err) {
 				Dialog.init(JSON.stringify(err));
 			});
@@ -221,6 +222,7 @@ function transferbuy() {
 				memo: sellersel,
 			}).then(function (data) {
 				//Dialog.init('Success!');
+				sellcoinchange();
 			}).catch(function (err) {
 				Dialog.init(JSON.stringify(err));
 			});
