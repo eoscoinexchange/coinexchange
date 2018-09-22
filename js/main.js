@@ -161,6 +161,7 @@ function transfersell() {
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
 					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0), options).then(function (tx) {
 						Dialog.init('Success!');
+						sellcoinchange();
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
 						console.log(e);
@@ -191,6 +192,7 @@ function transfergetback() {
 			eos.contract('cointotheeos', options).then(contract => {
 				contract.takeback(account.name, $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], options).then(function (tx) {
 					Dialog.init('Success!');
+					sellcoinchange();
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
 					e = JSON.parse(e);
@@ -236,6 +238,7 @@ function transferbuy() {
 				eos.contract('eosio.token', options).then(contract => {
 					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel + " " + curcointype, options).then(function (tx) {
 						Dialog.init('Success!');
+						sellcoinchange();
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
 						e = JSON.parse(e);
