@@ -148,8 +148,6 @@ function transfersell() {
 	} catch (e) {
 		Dialog.init(e);
 	}
-
-
 }
 
 function transfergetback() {
@@ -378,13 +376,13 @@ function getsellerlist() {
 	}
 
 	var index = '0';
-	if (cointype == "ITECOIN") {
+	if (curcointype == "ITECOIN") {
 		index = '0';
-	} else if (cointype == "PUB") {
+	} else if (curcointype == "PUB") {
 		index = '1';
-	} else if (cointype == "TPT") {
+	} else if (curcointype == "TPT") {
 		index = '2';
-	} else if (cointype == "BT") {
+	} else if (curcointype == "BT") {
 		index = '3';
 	}
 
