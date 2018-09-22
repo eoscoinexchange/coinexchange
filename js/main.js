@@ -367,9 +367,12 @@ function sellersort(obj) {
 function getsellerlist() {
 	var cointype = $(".dropdown-menu .active").find('a').html();
 	console.log("cointype is " + cointype);
-	if (cointype != undefined) {
+	if (cointype == "ITECOIN"
+	|| cointype == "PUB"
+	|| cointype == "TPT"
+	|| cointype == "BT") {
 		curcointype = cointype;
-	}
+	} 
 
 	if (curcointype == undefined) {
 		return -1;
