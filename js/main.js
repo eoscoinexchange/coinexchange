@@ -102,6 +102,32 @@ function SortTb(col, order)
 
 function sellcoinchange() {
 	$("#sellcoincntid").attr("placeholder", "请输入想出售或收回的" + $("#coinname").val().split(' ')[1] + "数量");
+
+	eosjs.getTableRows(true, $("#coinname").val().split(' ')[0], $("#loginbtn").html(), "accounts", function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			if (cnt == 0) {
+				console.log($("#coinname").val());
+				$("#accounttoken").text("余额:0.0000 "+$("#coinname").val().split(' ')[1]);
+			} else {
+				for (var i = 0; i < cnt; i++) {
+					var balance = data["rows"][i]["balance"];
+					console.log("balance is " + balance.split(' ')[1]);
+					if (balance.split(' ')[1] == $("#coinname").val().split(' ')[1]) {
+						$("#accounttoken").text("余额:"+balance);
+						break;
+					}
+				}
+
+				if(i == cnt)
+				{
+					$("#accounttoken").text("余额:0.0000 "+$("#coinname").val().split(' ')[1]);
+				}
+			}
+		} else {
+			console.log(error);
+		}
+	})
 }
 
 function transfersell() {
@@ -367,12 +393,12 @@ function sellersort(obj) {
 function getsellerlist() {
 	var cointype = $(".dropdown-menu .active").find('a').html();
 	console.log("cointype is " + cointype);
-	if (cointype == "ITECOIN"
-	|| cointype == "PUB"
-	|| cointype == "TPT"
-	|| cointype == "BT") {
+	if (cointype == "ITECOIN" ||
+		cointype == "PUB" ||
+		cointype == "TPT" ||
+		cointype == "BT") {
 		curcointype = cointype;
-	} 
+	}
 
 	if (curcointype == undefined) {
 		return -1;
@@ -426,6 +452,8 @@ function scatterLogin() {
 		$(".nav-tabs").append("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
+
+		sellcoinchange();
 	}).catch(function (e) {
 		console.log(e);
 	});
