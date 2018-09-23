@@ -452,6 +452,8 @@ function getsellerlist() {
 		index = '2';
 	} else if (curcointype == "BT") {
 		index = '3';
+	} else if (curcointype == "LKT") {
+		index = '4';
 	}
 
 	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
@@ -483,6 +485,19 @@ function getdeallist() {
 			//SortTb(1);
 
 			dealdel();
+		} else {
+			console.log(error);
+		}
+	})
+}
+
+function getglobaldata() {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "global", "", 0, -1, 10, function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			for (var i = 0; i < cnt; i++) {
+				$("#totaldealasset").text("总成交额: "+data["rows"][i]["dealtotalasset"]);
+			}
 		} else {
 			console.log(error);
 		}
@@ -537,5 +552,7 @@ $(function () {
 	//setTimeout(scatterLogin, 3000);
 	setInterval(getsellerlist, 3000);
 	setInterval(getdeallist, 3000);
+	setInterval(getglobaldata, 3000);
+
 	$(".dropdown-menu")
 })
