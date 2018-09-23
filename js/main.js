@@ -554,6 +554,4 @@ $(function () {
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 3000);
 	setInterval(getglobaldata, 3000);
-
-	$(".dropdown-menu")
 })
