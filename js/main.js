@@ -435,7 +435,8 @@ function getsellerlist() {
 	if (cointype == "ITECOIN" ||
 		cointype == "PUB" ||
 		cointype == "TPT" ||
-		cointype == "BT") {
+		cointype == "BT"  ||
+		cointype == "LKT") {
 		curcointype = cointype;
 	}
 
