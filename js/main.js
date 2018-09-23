@@ -551,7 +551,7 @@ $(function () {
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
 	//setTimeout(scatterLogin, 3000);
-	setInterval(getsellerlist, 3000);
+	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 3000);
 	setInterval(getglobaldata, 3000);
 
