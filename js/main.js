@@ -547,6 +547,7 @@ function gohomefroma(obj) {
 }
 
 $(function () {
+	return 0;
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
 		console.log("scatterLoaded enter");
