@@ -438,7 +438,8 @@ function getsellerlist() {
 		cointype == "BT"  ||
 		cointype == "LKT" ||
 		cointype == "DICE" ||
-		cointype == "YOU") {
+		cointype == "YOU" ||
+		cointype == "KBY" ) {
 		curcointype = cointype;
 	}
 
@@ -461,6 +462,8 @@ function getsellerlist() {
 		index = '5';
 	} else if (curcointype == "YOU") {
 		index = '6';
+	} else if (curcointype == "KBY") {
+		index = '7';
 	}
 
 	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
