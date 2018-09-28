@@ -108,20 +108,19 @@ function sellcoinchange() {
 			var cnt = data["rows"].length;
 			if (cnt == 0) {
 				console.log($("#coinname").val());
-				$("#accounttoken").text("余额:0.0000 "+$("#coinname").val().split(' ')[1]);
+				$("#accounttoken").text("余额:0.0000 " + $("#coinname").val().split(' ')[1]);
 			} else {
 				for (var i = 0; i < cnt; i++) {
 					var balance = data["rows"][i]["balance"];
 					console.log("balance is " + balance.split(' ')[1]);
 					if (balance.split(' ')[1] == $("#coinname").val().split(' ')[1]) {
-						$("#accounttoken").text("余额:"+balance);
+						$("#accounttoken").text("余额:" + balance);
 						break;
 					}
 				}
 
-				if(i == cnt)
-				{
-					$("#accounttoken").text("余额:0.0000 "+$("#coinname").val().split(' ')[1]);
+				if (i == cnt) {
+					$("#accounttoken").text("余额:0.0000 " + $("#coinname").val().split(' ')[1]);
 				}
 			}
 		} else {
@@ -132,8 +131,8 @@ function sellcoinchange() {
 
 function transfersell() {
 	try {
-		var priceint = accMul($("#coinpriceid").val(),10000);
-		console.log("priceint is "+priceint);
+		var priceint = accMul($("#coinpriceid").val(), 10000);
+		console.log("priceint is " + priceint);
 
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
@@ -339,26 +338,38 @@ function checkprice() {
 	// 	return -1;
 	// }
 	var price = $("#coinpriceid").val();
-	if (!(/(^[0-9]*[1-9][0-9]*$)/.test(price))
-	 && !(/^\d+(\.\d+)?$/.test(price))){
+	if (!(/(^[0-9]*[1-9][0-9]*$)/.test(price)) &&
+		!(/^\d+(\.\d+)?$/.test(price))) {
 		Dialog.init("价格输入格式有错，请输入整数或小数");
 		return -1;
-	 }
+	}
 
-	 if(price < 0.0001)
-	 {
+	if (price < 0.0001) {
 		Dialog.init("价格最小须为0.0001 EOS");
 		return -1;
-	 }
+	}
+
+
+	var g = /^\d+(?:\.\d{1,4})?$/;
+	if (!g.test(price)) {
+		Dialog.init("只支持四位小数");
+		return -1;
+	}
 }
 
 function accMul(arg1, arg2) {
 
-	var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+	var m = 0,
+		s1 = arg1.toString(),
+		s2 = arg2.toString();
 
-	try { m += s1.split(".")[1].length } catch (e) { }
+	try {
+		m += s1.split(".")[1].length
+	} catch (e) {}
 
-	try { m += s2.split(".")[1].length } catch (e) { }
+	try {
+		m += s2.split(".")[1].length
+	} catch (e) {}
 
 	return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
 
@@ -389,8 +400,8 @@ function dealadd(obj) {
 		var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
 		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
 		var tdprice = "<td><p >" + sellerprice + "</p></td>";
-		var tdcount = "<td>" + sellerassetaccount + " "+sellerassetname + "</td>";
-		var item = "<tr style='font-size:80%;' id='"+dealindex+"' class='update'>" + tdbuyer + tdseller + tdprice + tdcount+"</tr>";
+		var tdcount = "<td>" + sellerassetaccount + " " + sellerassetname + "</td>";
+		var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + "</tr>";
 
 		$("#deallistbody").prepend(item);
 	} else {
@@ -460,11 +471,11 @@ function getsellerlist() {
 	if (cointype == "ITECOIN" ||
 		cointype == "PUB" ||
 		cointype == "TPT" ||
-		cointype == "BT"  ||
+		cointype == "BT" ||
 		cointype == "LKT" ||
 		cointype == "DICE" ||
 		cointype == "YOU" ||
-		cointype == "KBY" ) {
+		cointype == "KBY") {
 		curcointype = cointype;
 	}
 
@@ -531,7 +542,7 @@ function getglobaldata() {
 		if (error == null) {
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
-				$("#totaldealasset").text("总成交额: "+data["rows"][i]["dealtotalasset"]);
+				$("#totaldealasset").text("总成交额: " + data["rows"][i]["dealtotalasset"]);
 			}
 		} else {
 			console.log(error);
