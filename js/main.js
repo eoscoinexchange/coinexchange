@@ -132,8 +132,10 @@ function sellcoinchange() {
 
 function transfersell() {
 	try {
-		var priceint = 1 / $("#coinpriceid").val();
-		if (tp.isConnected() == true) {
+		var priceint = accMul($("#coinpriceid").val(),10000);
+		console.log("priceint is "+priceint);
+
+		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
 				from: $("#loginbtn").html(),
 				to: 'cointotheeos',
@@ -141,7 +143,7 @@ function transfersell() {
 				tokenName: $("#coinname").val().split(' ')[1],
 				precision: 4,
 				contract: $("#coinname").val().split(' ')[0],
-				memo: priceint.toFixed(0),
+				memo: priceint,
 			}).then(function (data) {
 				//Dialog.init('Success!');
 				sellcoinchange();
@@ -160,7 +162,7 @@ function transfersell() {
 				};
 
 				eos.contract($("#coinname").val().split(' ')[0], options).then(contract => {
-					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint.toFixed(0), options).then(function (tx) {
+					contract.transfer(account.name, "cointotheeos", $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], priceint, options).then(function (tx) {
 						Dialog.init('Success!');
 						sellcoinchange();
 						//getaccountinfo(account.name);
@@ -330,13 +332,36 @@ function checkbuycoin() {
 }
 
 function checkprice() {
-	return 0;
-	var r = /^[0-9]+$/;
-	var count = $("#coinpriceid").val();
-	if (!r.test(count)) {
-		Dialog.init("价格须为整数");
+	// var r = /^[0-9]+$/;
+	// var count = $("#coinpriceid").val();
+	// if (!r.test(count)) {
+	// 	Dialog.init("价格须为整数");
+	// 	return -1;
+	// }
+	var price = $("#coinpriceid").val();
+	if (!(/(^[0-9]*[1-9][0-9]*$)/.test(price))
+	 && !(/^\d+(\.\d+)?$/.test(price))){
+		Dialog.init("价格输入格式有错，请输入整数或小数");
 		return -1;
-	}
+	 }
+
+	 if(price < 0.0001)
+	 {
+		Dialog.init("价格最小须为0.0001 EOS");
+		return -1;
+	 }
+}
+
+function accMul(arg1, arg2) {
+
+	var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+
+	try { m += s1.split(".")[1].length } catch (e) { }
+
+	try { m += s2.split(".")[1].length } catch (e) { }
+
+	return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+
 }
 
 function sellerdel() {
@@ -349,7 +374,7 @@ function dealadd(obj) {
 	var buyername = obj["buyer_account"];
 	var sellername = obj["seller_account"];
 	var sellerasset = obj["coin"];
-	var sellerprice = 1 / obj["price"];
+	var sellerprice = obj["price"];
 	var sellerassetarr = sellerasset.split('.');
 	var sellerassetaccount = sellerassetarr[0];
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
@@ -363,7 +388,7 @@ function dealadd(obj) {
 	if (tritem.length == 0) {
 		var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
 		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
-		var tdprice = "<td><p >" + sellerprice.toFixed(6) + " EOS</p></td>";
+		var tdprice = "<td><p >" + sellerprice + "</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + " "+sellerassetname + "</td>";
 		var item = "<tr style='font-size:80%;' id='"+dealindex+"' class='update'>" + tdbuyer + tdseller + tdprice + tdcount+"</tr>";
 
@@ -382,7 +407,7 @@ function dealdel() {
 function selleradd(obj) {
 	var sellername = obj["seller_account"];
 	var sellerasset = obj["coin"];
-	var sellerprice = 1 / obj["price"];
+	var sellerprice = obj["price"];
 	var sellerassetarr = sellerasset.split('.');
 	var sellerassetaccount = sellerassetarr[0];
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
@@ -394,7 +419,7 @@ function selleradd(obj) {
 
 	if (tritem.length == 0) {
 		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
-		var tdprice = "<td><p >" + sellerprice.toFixed(6) + " EOS</p></td>";
+		var tdprice = "<td><p >" + sellerprice + "</p></td>";
 		var tdcount = "<td>" + sellerassetaccount + "</td>";
 		var tdcoinname = "<td>" + sellerassetname + "</td>";
 		var tdbuy = "<td><button class='btn' onclick='wantbuy(this)'>购买</button></td>";
@@ -406,7 +431,7 @@ function selleradd(obj) {
 	} else {
 		var tditem = tritem.find('td');
 		tditem.eq(0).html(sellername);
-		tditem.eq(1).find("p").text(sellerprice.toFixed(6) + " EOS");
+		tditem.eq(1).find("p").text(sellerprice);
 		tditem.eq(2).html(sellerassetaccount);
 		tritem.attr("class", "update");
 	}
@@ -466,7 +491,7 @@ function getsellerlist() {
 		index = '7';
 	}
 
-	eosjs.getTableRows(true, "cointotheeos", index, "seller", "", 0, -1, 10000, function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", index, "sellerlist", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			//console.log(JSON.parse(data));
 			//sellersort(data["rows"]);
@@ -485,7 +510,7 @@ function getsellerlist() {
 }
 
 function getdeallist() {
-	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "buyrecords", "", 0, -1, 10000, function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "buyrecord", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
@@ -559,7 +584,6 @@ $(function () {
 		scatter = window.scatter;
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
-	//setTimeout(scatterLogin, 3000);
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 3000);
 	setInterval(getglobaldata, 3000);
