@@ -466,7 +466,7 @@ function sellersort(obj) {
 }
 
 function getsellerlist() {
-	var cointype = $(".dropdown-menu .active").find('a').html();
+	var cointype = $(".dropdown-menu .active").find('a').html().split(' ')[0];
 	console.log("cointype is " + cointype);
 	if (cointype == "ITECOIN" ||
 		cointype == "PUB" ||
