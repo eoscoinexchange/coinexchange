@@ -532,11 +532,11 @@ function coinadd(obj) {
 	if (symbol == "BT") {
 		coinli = '<li class="divider"></li>'
 		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		+pkey+'" class="'+symbol+'" "onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	} else {
 		coinli = '<li class="divider"></li>'
 		+'<li><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		+pkey+'" class="'+symbol+'" "onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	}
 
 	$("#tokenul").append(coinli);
@@ -597,7 +597,7 @@ function scatterLogin() {
 }
 
 function gohome() {
-	$("#" + curcointype).click();
+	$("." + curcointype).click();
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
 }
