@@ -466,18 +466,12 @@ function sellersort(obj) {
 }
 
 function getsellerlist() {
-	var cointype = $(".dropdown-menu .active").find('a').html().split(' ')[0];
+	var cointype = $("#tokenul .active").find('a').html().split(' ')[0];
+	var pkey = $("#tokenul .active").find('a').attr('id');
 	console.log("cointype is " + cointype);
-	if (cointype == "ITECOIN" ||
-		cointype == "PUB" ||
-		cointype == "TPT" ||
-		cointype == "BT" ||
-		cointype == "LKT" ||
-		cointype == "DICE" ||
-		cointype == "YOU" ||
-		cointype == "KBY" ||
-		cointype == "SET" ||
-		cointype == "RIDL") {
+
+	if(cointype != undefined)
+	{
 		curcointype = cointype;
 	}
 
@@ -485,30 +479,9 @@ function getsellerlist() {
 		return -1;
 	}
 
-	var index = '0';
-	if (curcointype == "ITECOIN") {
-		index = '0';
-	} else if (curcointype == "PUB") {
-		index = '1';
-	} else if (curcointype == "TPT") {
-		index = '2';
-	} else if (curcointype == "BT") {
-		index = '3';
-	} else if (curcointype == "LKT") {
-		index = '4';
-	} else if (curcointype == "DICE") {
-		index = '5';
-	} else if (curcointype == "YOU") {
-		index = '6';
-	} else if (curcointype == "KBY") {
-		index = '7';
-	} else if (curcointype == "RIDL") {
-		index = '8';
-	} else if (curcointype == "SET") {
-		index = '9';
-	}
+	console.log("getsellerlist pkey is "+pkey);
 
-	eosjs.getTableRows(true, "cointotheeos", index, "sellerlist", "", 0, -1, 10000, function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", pkey, "sellerlist", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			//console.log(JSON.parse(data));
 			//sellersort(data["rows"]);
@@ -537,6 +510,48 @@ function getdeallist() {
 			//SortTb(1);
 
 			dealdel();
+		} else {
+			console.log(error);
+		}
+	})
+}
+
+function coinadd(obj) {
+	var pkey = obj["pkey"];
+	var contract = obj["contract"];
+	var symbol = obj["quant"].split(' ')[1];
+	var enable = obj["enable"];
+
+	if(enable == 0)
+	{
+		return 0;
+	}
+
+	var coinli = '';
+
+	if (symbol == "BT") {
+		coinli = '<li class="divider"></li>'
+		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="'
+		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+	} else {
+		coinli = '<li class="divider"></li>'
+		+'<li><a href="#tablediv" data-toggle="tab" id="'
+		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+	}
+
+	$("#tokenul").append(coinli);
+
+	var coinseloption = '<option value="' + contract + " " + symbol + '">' + symbol + '</option>';
+	$("#coinname").append(coinseloption);
+}
+
+function getcoinlist() {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 100, function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			for (var i = 0; i < cnt; i++) {
+				coinadd(data["rows"][i]);
+			}
 		} else {
 			console.log(error);
 		}
@@ -588,7 +603,7 @@ function gohome() {
 }
 
 function gohomefroma(obj) {
-	var cointype = $(obj).html();
+	var cointype = $(obj).html().split(' ')[0];
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
 	$("#buycoincntid").attr("placeholder", "请输入想购买的" + cointype + "数量");
@@ -601,6 +616,8 @@ $(function () {
 		scatter = window.scatter;
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
+
+	getcoinlist();
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 3000);
 	setInterval(getglobaldata, 3000);
