@@ -467,7 +467,7 @@ function sellersort(obj) {
 
 function getsellerlist() {
 	var cointype = $("#tokenul .active").find('a').html().split(' ')[0];
-	var pkey = $("#tokenul .active").find('a').attr('id');
+	var pkey = $("#tokenul .active").find('a').attr('id').split(' ')[1];
 	console.log("cointype is " + cointype);
 
 	if(cointype != undefined)
@@ -531,11 +531,11 @@ function coinadd(obj) {
 
 	if (symbol == "BT") {
 		coinli = '<li class="divider"></li>'
-		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="'
+		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin '
 		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	} else {
 		coinli = '<li class="divider"></li>'
-		+'<li><a href="#tablediv" data-toggle="tab" id="'
+		+'<li><a href="#tablediv" data-toggle="tab" id="coin '
 		+pkey+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	}
 
@@ -546,7 +546,7 @@ function coinadd(obj) {
 }
 
 function getcoinlist() {
-	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 100, function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
