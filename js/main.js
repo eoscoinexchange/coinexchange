@@ -532,11 +532,11 @@ function coinadd(obj) {
 	if (symbol == "BT") {
 		coinli = '<li class="divider"></li>'
 		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" class="'+symbol+'" "onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		+pkey+'" class="'+symbol+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	} else {
 		coinli = '<li class="divider"></li>'
 		+'<li><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" class="'+symbol+'" "onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		+pkey+'" class="'+symbol+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
 	}
 
 	$("#tokenul").append(coinli);
@@ -602,7 +602,7 @@ function gohome() {
 	$("#actionbuydiv").hide();
 }
 
-function gohomefroma(obj) {
+function gohomefroma(obj) {	
 	var cointype = $(obj).html().split(' ')[0];
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
