@@ -78,7 +78,6 @@
 
         select {
             -webkit-appearance: none;
-            height:50px;
         }
         
         input {
@@ -140,8 +139,9 @@
             <div id="actiondiv" class="tab-pane container-fluid">
                 <div id="actionselldiv" class="form row" style="width:300px;margin:20px auto;">
                     <div style="border-bottom: 1px solid #1E90FF;">
-                        <i class="fa fa fa-sort-down fa-lg"></i>
-                        <select id="coinname" style="border:0;width:300px;background-color:#ffffff;" onchange="sellcoinchange()">
+                        <i class="fa fa-sort-down fa-lg"></i>
+                        <select id="coinname" style="border:0;width:300px;height:50px;background-color:#ffffff;"
+                            onchange="sellcoinchange()">
                         </select>
                     </div>
                     <div style="border-bottom: 1px solid #1E90FF;">
@@ -203,7 +203,16 @@
                 </div>
             </div>
             <div id="deallistdiv" class="tab-pane container-fluid">
-                <p id="totaldealasset"></p>
+                <div style="float:left;display:inline;">
+                    <p id="totaldealasset"></p>
+                </div>
+                <div style="border-bottom: 0px solid #1E90FF;float:right;display:inline;" class="dropdown">
+                    <a id="coindealtype" href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 14px;color:#000000;height:20px;">
+                        全部<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" id="coindealul">
+                    </ul>
+                </div>
                 <div id="deallistid" class="form row">
                     <table class="table">
                         <thead>

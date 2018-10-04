@@ -5,6 +5,7 @@ var loginflag = 0;
 var sellersel = '';
 var sellerprice = '';
 var curcointype = '';
+var curcoindeal = 'all';
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -397,13 +398,15 @@ function dealadd(obj) {
 	}
 
 	if (tritem.length == 0) {
-		var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
-		var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
-		var tdprice = "<td><p >" + sellerprice + "</p></td>";
-		var tdcount = "<td>" + sellerassetaccount + " " + sellerassetname + "</td>";
-		var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + "</tr>";
+		if (sellerassetname == curcoindeal || curcoindeal == 'all') {
+			var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
+			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
+			var tdprice = "<td><p >" + sellerprice + "</p></td>";
+			var tdcount = "<td>" + sellerassetaccount + " " + sellerassetname + "</td>";
+			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + "</tr>";
 
-		$("#deallistbody").prepend(item);
+			$("#deallistbody").prepend(item);
+		}
 	} else {
 		tritem.attr("class", "update");
 	}
@@ -470,8 +473,7 @@ function getsellerlist() {
 	var pkey = $("#tokenul .active").find('a').attr('id').split(' ')[1];
 	console.log("cointype is " + cointype);
 
-	if(cointype != undefined)
-	{
+	if (cointype != undefined) {
 		curcointype = cointype;
 	}
 
@@ -479,7 +481,7 @@ function getsellerlist() {
 		return -1;
 	}
 
-	console.log("getsellerlist pkey is "+pkey);
+	console.log("getsellerlist pkey is " + pkey);
 
 	eosjs.getTableRows(true, "cointotheeos", pkey, "sellerlist", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
@@ -516,30 +518,56 @@ function getdeallist() {
 	})
 }
 
+function coindeallichange(obj) {
+	var symbol = $(obj).html();
+
+	if (symbol != curcoindeal) {
+		$("#deallistbody").empty();
+	}
+
+
+	if ($(obj).attr('id') != "coindealallid") {
+		curcoindeal = symbol;
+		if ($("#coindealul").find(document.getElementById('coindealallid')).length == 0) {
+			var coindeal = '';
+			coindeal = '<li><a id="coindealallid" onclick="javascript:coindeallichange(this)">全部</a></li>';
+			$("#coindealul").prepend(coindeal);
+		}
+	} else {
+		curcoindeal = 'all';
+		$(obj).parent().remove();
+	}
+
+	$("#coindealtype").html(symbol + '<b class="caret"></b>');
+}
+
 function coinadd(obj) {
 	var pkey = obj["pkey"];
 	var contract = obj["contract"];
 	var symbol = obj["quant"].split(' ')[1];
 	var enable = obj["enable"];
 
-	if(enable == 0)
-	{
+	if (enable == 0) {
 		return 0;
 	}
 
 	var coinli = '';
 
 	if (symbol == "BT") {
-		coinli = '<li class="divider"></li>'
-		+'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" class="'+symbol+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		coinli = '<li class="divider"></li>' +
+			'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin ' +
+			pkey + '" class="' + symbol + '" onclick="gohomefroma(this)">' + symbol + ' <i>' + contract + '</i></a></li>';
 	} else {
-		coinli = '<li class="divider"></li>'
-		+'<li><a href="#tablediv" data-toggle="tab" id="coin '
-		+pkey+'" class="'+symbol+'" onclick="gohomefroma(this)">'+symbol+' <i>'+contract+'</i></a></li>';
+		coinli = '<li class="divider"></li>' +
+			'<li><a href="#tablediv" data-toggle="tab" id="coin ' +
+			pkey + '" class="' + symbol + '" onclick="gohomefroma(this)">' + symbol + ' <i>' + contract + '</i></a></li>';
 	}
 
 	$("#tokenul").append(coinli);
+
+	var coindeal = '';
+	coindeal = '<li><a onclick="javascript:coindeallichange(this)">' + symbol + '</a></li>';
+	$("#coindealul").append(coindeal);
 
 	var coinseloption = '<option value="' + contract + " " + symbol + '">' + symbol + '</option>';
 	$("#coinname").append(coinseloption);
@@ -602,7 +630,7 @@ function gohome() {
 	$("#actionbuydiv").hide();
 }
 
-function gohomefroma(obj) {	
+function gohomefroma(obj) {
 	var cointype = $(obj).html().split(' ')[0];
 	$("#sellerlistid").show();
 	$("#actionbuydiv").hide();
