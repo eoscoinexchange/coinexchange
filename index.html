@@ -189,9 +189,11 @@
                 <div id="actionbuydiv" class="form row" style="width:300px;margin:20px auto;" hidden>
                     <div style="border-bottom: 1px solid #1E90FF;">
                         <input id="buycoincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
-                            placeholder="请输入想购买的BT数量" onchange="checkbuycoin(this)">
+                            placeholder="请输入想购买的BT数量" onchange="checkbuycoin(this)" oninput="calbuyneedeos()">
                         </input>
-                        <p id="buytipid"></p>
+                    </div>
+                    <div style="text-align: left;width:300px;margin:5px auto;">
+                            <p id="accounteos">需支付:0.0000 EOS</p>
                     </div>
                     <br />
                     <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;margin:10px auto;">

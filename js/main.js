@@ -232,7 +232,7 @@ function transfergetback() {
 
 function transferbuy() {
 	try {
-		var cointoeos = $("#buycoincntid").val() * sellerprice;
+		var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
 				from: $("#loginbtn").html(),
@@ -340,6 +340,13 @@ function checksellcoin() {
 		Dialog.init("数量须为整数");
 		return -1;
 	}
+}
+
+function calbuyneedeos()
+{
+	var count = $("#buycoincntid").val();
+	var accounteos = accMul(count, sellerprice);
+	$("#accounteos").text("需支付:"+accounteos+" EOS");
 }
 
 function checkbuycoin() {
