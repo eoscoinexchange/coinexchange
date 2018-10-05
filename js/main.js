@@ -47,6 +47,26 @@ function getaccountinfo(accountname) {
 	})
 }
 
+function formatDateTime(inputTime) {   
+	if(inputTime == 0)
+	{
+		return "未记录";
+	}
+	var date = new Date(inputTime);    
+	var y = date.getFullYear();      
+	var m = date.getMonth() + 1;      
+	m = m < 10 ? ('0' + m) : m;      
+	var d = date.getDate();      
+	d = d < 10 ? ('0' + d) : d;      
+	var h = date.getHours();    
+	h = h < 10 ? ('0' + h) : h;    
+	var minute = date.getMinutes();    
+	var second = date.getSeconds();    
+	minute = minute < 10 ? ('0' + minute) : minute;      
+	second = second < 10 ? ('0' + second) : second;     
+	return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;  
+};
+
 function swapRow(i, k)
 
 {
@@ -391,6 +411,7 @@ function dealadd(obj) {
 	var sellerassetaccount = sellerassetarr[0];
 	var sellerassetname = sellerassetarr[1].split(' ')[1];
 	var dealindex = obj["pkey"];
+	var dealtime = obj["buytime"];
 	var tritem = $("#deallistbody").find(document.getElementById(dealindex));
 
 	if (sellerassetaccount == 0) {
@@ -403,7 +424,8 @@ function dealadd(obj) {
 			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
 			var tdprice = "<td><p >" + sellerprice + "</p></td>";
 			var tdcount = "<td>" + sellerassetaccount + " " + sellerassetname + "</td>";
-			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + "</tr>";
+			var tddealtime = "<td>" + formatDateTime(dealtime/1000) + "</td>";
+			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + tddealtime+"</tr>";
 
 			$("#deallistbody").prepend(item);
 		}
@@ -502,7 +524,7 @@ function getsellerlist() {
 }
 
 function getdeallist() {
-	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "buyrecord", "", 0, -1, 10000, function (error, data) {
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "buyrecords", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
@@ -647,6 +669,6 @@ $(function () {
 
 	getcoinlist();
 	setInterval(getsellerlist, 1000);
-	setInterval(getdeallist, 3000);
+	setInterval(getdeallist, 2000);
 	setInterval(getglobaldata, 3000);
 })
