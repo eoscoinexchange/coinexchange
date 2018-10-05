@@ -283,6 +283,7 @@ function wantbuy(obj) {
 	}
 
 	$("#buycoincntid").val('');
+	$("#accounteos").text('需支付:0 EOS');
 	sellersel = $(obj).parent().parent().find('td').eq(0).html();
 	sellerprice = $(obj).parent().parent().find('td').eq(1).find("p").html().split(' ')[0];
 
@@ -430,8 +431,8 @@ function dealadd(obj) {
 			var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
 			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
 			var tdprice = "<td><p >" + sellerprice + "</p></td>";
-			var tdcount = "<td>" + sellerassetaccount + " " + sellerassetname + "</td>";
-			var tddealtime = "<td>" + formatDateTime(dealtime/1000) + "</td>";
+			var tdcount = "<td style='text-align:center;'>" + sellerassetaccount + " " + sellerassetname + "</td>";
+			var tddealtime = "<td style='text-align:center;'>" + formatDateTime(dealtime/1000) + "</td>";
 			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + tddealtime+"</tr>";
 
 			$("#deallistbody").prepend(item);
