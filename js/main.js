@@ -152,7 +152,7 @@ function sellcoinchange() {
 
 function transfersell() {
 	try {
-		var priceint = accMul($("#coinpriceid").val(), 10000);
+		var priceint = accMul($("#coinpriceid").val(), 1000000);
 		console.log("priceint is " + priceint);
 
 		if (tp.isConnected() == true && 0) {
@@ -233,6 +233,16 @@ function transfergetback() {
 function transferbuy() {
 	try {
 		var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
+		if(cointoeos.toFixed(4) != cointoeos)
+		{
+			if(cointoeos.toFixed(4) < cointoeos)
+			{
+				cointoeos = cointoeos+0.0001;
+			}
+		}
+
+		console.log("transferbuy cointoeos is "+cointoeos.toFixed(4));
+
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
 				from: $("#loginbtn").html(),
@@ -345,9 +355,15 @@ function checksellcoin() {
 
 function calbuyneedeos()
 {
-	var count = $("#buycoincntid").val();
-	var accounteos = accMul(count, sellerprice);
-	$("#accounteos").text("需支付:"+accounteos+" EOS");
+	var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
+	if(cointoeos.toFixed(4) != cointoeos)
+	{
+		if(cointoeos.toFixed(4) < cointoeos)
+		{
+			cointoeos = cointoeos+0.0001;
+		}
+	}
+	$("#accounteos").text("需支付:"+cointoeos.toFixed(4)+" EOS");
 }
 
 function checkbuycoin() {
@@ -373,15 +389,15 @@ function checkprice() {
 		return -1;
 	}
 
-	if (price < 0.0001) {
-		Dialog.init("价格最小须为0.0001 EOS");
+	if (price < 0.000001) {
+		Dialog.init("价格最小须为0.000001 EOS");
 		return -1;
 	}
 
 
-	var g = /^\d+(?:\.\d{1,4})?$/;
+	var g = /^\d+(?:\.\d{1,6})?$/;
 	if (!g.test(price)) {
-		Dialog.init("只支持四位小数");
+		Dialog.init("只支持六位小数");
 		return -1;
 	}
 }
