@@ -444,9 +444,9 @@ function dealadd(obj) {
 
 	if (tritem.length == 0) {
 		if (sellerassetname == curcoindeal || curcoindeal == 'all') {
-			var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;'>" + buyername + "</td>";
-			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
-			var tdprice = "<td><p >" + sellerprice + "</p></td>";
+			var tdbuyer = "<td style='word-wrap:break-word;word-break:break-all;text-align:center;'>" + buyername + "</td>";
+			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;text-align:center;'>" + sellername + "</td>";
+			var tdprice = "<td style='text-align:center;'><p >" + sellerprice + "</p></td>";
 			var tdcount = "<td style='text-align:center;'>" + sellerassetaccount + " " + sellerassetname + "</td>";
 			var tddealtime = "<td style='text-align:center;'>" + formatDateTime(dealtime/1000) + "</td>";
 			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + tddealtime+"</tr>";
