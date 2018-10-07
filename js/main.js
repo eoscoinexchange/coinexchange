@@ -664,10 +664,32 @@ function scatterLogin() {
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
+		checkluroy(account.name);
+
 		sellcoinchange();
 	}).catch(function (e) {
 		console.log(e);
 	});
+}
+
+function checkluroy(name)
+{
+	eosjs.getTableRows(true, "roulettespin", "roulettespin", "account", "", 0, -1, 10000, function (error, data) {
+		if (error == null) {
+			
+			var cnt = data["rows"].length;
+			for (var i = 0; i < cnt; i++) {
+				if(data["rows"][i]["name"] == name)
+				{
+					$("#luroybtn").html("已撸 10000 ROY");
+					$("#luroybtn").attr("disabled", true);
+					break;
+				}
+			}
+		} else {
+			console.log(error);
+		}
+	})
 }
 
 function luroy()
@@ -676,7 +698,7 @@ function luroy()
 		Dialog.init("请先点击登录");
 		return;
 	}
-	
+
 	scatter.getIdentity({
 		accounts: [network]
 	}).then(function (identity) {
