@@ -681,7 +681,7 @@ function checkluroy(name)
 			for (var i = 0; i < cnt; i++) {
 				if(data["rows"][i]["name"] == name)
 				{
-					$("#luroybtn").html("已撸 10000 ROY");
+					$("#luroybtn").html("此账号已撸 10000 ROY");
 					$("#luroybtn").attr("disabled", true);
 					break;
 				}
