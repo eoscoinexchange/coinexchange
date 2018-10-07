@@ -672,6 +672,11 @@ function scatterLogin() {
 
 function luroy()
 {
+	if (loginflag == 0) {
+		Dialog.init("请先点击登录");
+		return;
+	}
+	
 	scatter.getIdentity({
 		accounts: [network]
 	}).then(function (identity) {
