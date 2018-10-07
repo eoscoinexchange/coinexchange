@@ -664,7 +664,7 @@ function scatterLogin() {
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
-		checkluroy(account.name);
+		//checkluroy(account.name);
 
 		sellcoinchange();
 	}).catch(function (e) {
@@ -694,6 +694,8 @@ function checkluroy(name)
 
 function luroy()
 {
+	Dialog.init("活动已结束");
+	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
