@@ -659,7 +659,7 @@ function scatterLogin() {
 		console.log(account.name + " 已登录");
 		//Dialog.init(account.name + " 已登录");
 		//getaccountinfo(account.name);
-		$("#dealli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+		$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
 		$("#buyli").show();
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
@@ -668,6 +668,32 @@ function scatterLogin() {
 	}).catch(function (e) {
 		console.log(e);
 	});
+}
+
+function luroy()
+{
+	scatter.getIdentity({
+		accounts: [network]
+	}).then(function (identity) {
+		var account = identity.accounts[0];
+		var options = {
+			authorization: account.name + '@' + account.authority,
+			broadcast: true,
+			sign: true
+		};
+
+		eos.contract('roulettespin', options).then(contract => {
+			contract.login(account.name, "eosgametoken", options).then(function (tx) {
+				Dialog.init('Success!');
+				//getaccountinfo(account.name);
+			}).catch(function (e) {
+				console.log(e);
+				e = JSON.parse(e);
+				Dialog.init('Tx failed: ' + e.error.details[0].message);
+			});
+		});
+
+	})
 }
 
 function gohome() {
