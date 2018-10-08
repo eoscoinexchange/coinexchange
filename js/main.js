@@ -591,7 +591,7 @@ function coinadd(obj) {
 
 	if (symbol == "BT") {
 		coinli = //'<li class="divider"></li>' +
-			'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin ' +
+			'<li><a href="#tablediv" data-toggle="tab" id="coin ' +
 			pkey + '" class="' + symbol + '" onclick="gohomefroma(this)">' + symbol + ' <i>' + contract + '</i></a></li>';
 	} else {
 		coinli = //'<li class="divider"></li>' +
@@ -607,6 +607,11 @@ function coinadd(obj) {
 
 	var coinseloption = '<option value="' + contract + " " + symbol + '">' + symbol + '</option>';
 	$("#coinname").append(coinseloption);
+
+	if($("#example-navbar-collapse").find(".active") == undefined)
+	{
+		$(".BT").click();
+	}
 }
 
 function getcoinlist() {
