@@ -681,6 +681,8 @@ function checkluroy(name) {
 }
 
 function luroy() {
+	Dialog.init("已暂停");
+	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
