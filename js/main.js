@@ -608,7 +608,7 @@ function coinadd(obj) {
 	var coinseloption = '<option value="' + contract + " " + symbol + '">' + symbol + '</option>';
 	$("#coinname").append(coinseloption);
 
-	if($("#example-navbar-collapse").find(".active") == undefined)
+	if($("#example-navbar-collapse").find(".active").length == 0)
 	{
 		$(".BT").click();
 	}
