@@ -47,29 +47,26 @@ function getaccountinfo(accountname) {
 	})
 }
 
-function formatDateTime(inputTime) {   
-	if(inputTime == 0)
-	{
-		return "未记录";
+function formatDateTime(inputTime) {
+	if (inputTime == 0) {
+		return "未记录";
 	}
-	var date = new Date(inputTime);    
-	var y = date.getFullYear();      
-	var m = date.getMonth() + 1;      
-	m = m < 10 ? ('0' + m) : m;      
-	var d = date.getDate();      
-	d = d < 10 ? ('0' + d) : d;      
-	var h = date.getHours();    
-	h = h < 10 ? ('0' + h) : h;    
-	var minute = date.getMinutes();    
-	var second = date.getSeconds();    
-	minute = minute < 10 ? ('0' + minute) : minute;      
-	second = second < 10 ? ('0' + second) : second;     
-	return y + '/' + m + '/' + d+' '+h+':'+minute+':'+second;  
+	var date = new Date(inputTime);
+	var y = date.getFullYear();
+	var m = date.getMonth() + 1;
+	m = m < 10 ? ('0' + m) : m;
+	var d = date.getDate();
+	d = d < 10 ? ('0' + d) : d;
+	var h = date.getHours();
+	h = h < 10 ? ('0' + h) : h;
+	var minute = date.getMinutes();
+	var second = date.getSeconds();
+	minute = minute < 10 ? ('0' + minute) : minute;
+	second = second < 10 ? ('0' + second) : second;
+	return y + '/' + m + '/' + d + ' ' + h + ':' + minute + ':' + second;
 };
 
-function swapRow(i, k)
-
-{
+function swapRow(i, k) {
 	var tb = $("#sellertablebody").find("tr");
 
 	$(tb).eq(k).insertBefore($(tb).eq(i));
@@ -78,9 +75,7 @@ function swapRow(i, k)
 
 }
 
-function SortTb(col, order)
-
-{
+function SortTb(col, order) {
 
 	var tb = $("#sellertablebody").find("tr");
 
@@ -233,15 +228,13 @@ function transfergetback() {
 function transferbuy() {
 	try {
 		var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
-		if(cointoeos.toFixed(4) != cointoeos)
-		{
-			if(cointoeos.toFixed(4) < cointoeos)
-			{
-				cointoeos = cointoeos+0.0001;
+		if (cointoeos.toFixed(4) != cointoeos) {
+			if (cointoeos.toFixed(4) < cointoeos) {
+				cointoeos = cointoeos + 0.0001;
 			}
 		}
 
-		console.log("transferbuy cointoeos is "+cointoeos.toFixed(4));
+		console.log("transferbuy cointoeos is " + cointoeos.toFixed(4));
 
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
@@ -353,17 +346,14 @@ function checksellcoin() {
 	}
 }
 
-function calbuyneedeos()
-{
+function calbuyneedeos() {
 	var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
-	if(cointoeos.toFixed(4) != cointoeos)
-	{
-		if(cointoeos.toFixed(4) < cointoeos)
-		{
-			cointoeos = cointoeos+0.0001;
+	if (cointoeos.toFixed(4) != cointoeos) {
+		if (cointoeos.toFixed(4) < cointoeos) {
+			cointoeos = cointoeos + 0.0001;
 		}
 	}
-	$("#accounteos").text("需支付:"+cointoeos.toFixed(4)+" EOS");
+	$("#accounteos").text("需支付:" + cointoeos.toFixed(4) + " EOS");
 }
 
 function checkbuycoin() {
@@ -448,8 +438,8 @@ function dealadd(obj) {
 			var tdseller = "<td style='word-wrap:break-word;word-break:break-all;text-align:center;'>" + sellername + "</td>";
 			var tdprice = "<td style='text-align:center;'><p >" + sellerprice + "</p></td>";
 			var tdcount = "<td style='text-align:center;'>" + sellerassetaccount + " " + sellerassetname + "</td>";
-			var tddealtime = "<td style='text-align:center;'>" + formatDateTime(dealtime/1000) + "</td>";
-			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + tddealtime+"</tr>";
+			var tddealtime = "<td style='text-align:center;'>" + formatDateTime(dealtime / 1000) + "</td>";
+			var item = "<tr style='font-size:80%;' id='" + dealindex + "' class='update'>" + tdbuyer + tdseller + tdprice + tdcount + tddealtime + "</tr>";
 
 			$("#deallistbody").prepend(item);
 		}
@@ -600,11 +590,11 @@ function coinadd(obj) {
 	var coinli = '';
 
 	if (symbol == "BT") {
-		coinli = '<li class="divider"></li>' +
+		coinli = //'<li class="divider"></li>' +
 			'<li class="active"><a href="#tablediv" data-toggle="tab" id="coin ' +
 			pkey + '" class="' + symbol + '" onclick="gohomefroma(this)">' + symbol + ' <i>' + contract + '</i></a></li>';
 	} else {
-		coinli = '<li class="divider"></li>' +
+		coinli = //'<li class="divider"></li>' +
 			'<li><a href="#tablediv" data-toggle="tab" id="coin ' +
 			pkey + '" class="' + symbol + '" onclick="gohomefroma(this)">' + symbol + ' <i>' + contract + '</i></a></li>';
 	}
@@ -672,15 +662,13 @@ function scatterLogin() {
 	});
 }
 
-function checkluroy(name)
-{
+function checkluroy(name) {
 	eosjs.getTableRows(true, "roulettespin", "roulettespin", "account", "", 0, -1, 10000, function (error, data) {
 		if (error == null) {
-			
+
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
-				if(data["rows"][i]["name"] == name)
-				{
+				if (data["rows"][i]["name"] == name) {
 					$("#luroybtn").html("此账号已撸 10000 ROY");
 					$("#luroybtn").attr("disabled", true);
 					break;
@@ -692,8 +680,7 @@ function checkluroy(name)
 	})
 }
 
-function luroy()
-{
+function luroy() {
 	Dialog.init("活动已结束");
 	return;
 	if (loginflag == 0) {
