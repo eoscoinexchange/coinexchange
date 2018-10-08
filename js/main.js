@@ -681,8 +681,6 @@ function checkluroy(name) {
 }
 
 function luroy() {
-	Dialog.init("活动已结束");
-	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
@@ -698,8 +696,8 @@ function luroy() {
 			sign: true
 		};
 
-		eos.contract('roulettespin', options).then(contract => {
-			contract.login(account.name, "eosgametoken", options).then(function (tx) {
+		eos.contract('efinitychips', options).then(contract => {
+			contract.claim(account.name, "eosgametoken", options).then(function (tx) {
 				Dialog.init('Success!');
 				//getaccountinfo(account.name);
 			}).catch(function (e) {
