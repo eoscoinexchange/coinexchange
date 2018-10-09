@@ -680,7 +680,7 @@ function checkluroy(name) {
 	})
 }
 
-function luroy() {
+function luchips() {
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
@@ -707,6 +707,35 @@ function luroy() {
 			});
 		});
 
+	})
+}
+
+function luseven() {
+	if (loginflag == 0) {
+		Dialog.init("请先点击登录");
+		return;
+	}
+
+	scatter.getIdentity({
+		accounts: [network]
+	}).then(function (identity) {
+		var account = identity.accounts[0];
+		var options = {
+			authorization: account.name + '@' + account.authority,
+			broadcast: true,
+			sign: true
+		};
+
+		eos.contract('xxxsevensxxx', options).then(contract => {
+			contract.signup(account.name, "10000.0000 SEVEN", options).then(function (tx) {
+				Dialog.init('Success!');
+				//getaccountinfo(account.name);
+			}).catch(function (e) {
+				console.log(e);
+				e = JSON.parse(e);
+				Dialog.init('Tx failed: ' + e.error.details[0].message);
+			});
+		});
 	})
 }
 
