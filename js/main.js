@@ -686,7 +686,7 @@ function checkluroy(name) {
 }
 
 function luchips() {
-	Dialog.init("已暂停");
+	Dialog.init("由于合约帐号CHIPS不足，已暂停");
 	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
