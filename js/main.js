@@ -685,8 +685,6 @@ function checkshishicai(name) {
 }
 
 function lushishicai() {
-	Dialog.init("项目方已暂停赠送");
-	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
@@ -703,7 +701,7 @@ function lushishicai() {
 		};
 
 		eos.contract('eosio.token', options).then(contract => {
-			contract.transfer(account.name, "eosplaybrand", "0.1000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
+			contract.transfer(account.name, "eosplaybrand", "0.3000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
 				Dialog.init('Success!');
 				checkshishicai(account.name);
 				//getaccountinfo(account.name);
