@@ -703,6 +703,7 @@ function lushishicai() {
 		eos.contract('eosio.token', options).then(contract => {
 			contract.transfer(account.name, "eosplaybrand", "0.1000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
 				Dialog.init('Success!');
+				checkshishicai(account.name);
 				//getaccountinfo(account.name);
 			}).catch(function (e) {
 				console.log(e);
