@@ -685,6 +685,8 @@ function checkshishicai(name) {
 }
 
 function lushishicai() {
+	Dialog.init("项目方已暂停赠送");
+	return;
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
