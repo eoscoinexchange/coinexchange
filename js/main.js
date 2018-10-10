@@ -659,7 +659,7 @@ function scatterLogin() {
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
-		//checkluroy(account.name);
+		checkshishicai(account.name);
 
 		sellcoinchange();
 	}).catch(function (e) {
@@ -667,15 +667,14 @@ function scatterLogin() {
 	});
 }
 
-function checkluroy(name) {
-	eosjs.getTableRows(true, "roulettespin", "roulettespin", "account", "", 0, -1, 10000, function (error, data) {
+function checkshishicai(name) {
+	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
-
 			var cnt = data["rows"].length;
 			for (var i = 0; i < cnt; i++) {
-				if (data["rows"][i]["name"] == name) {
-					$("#luroybtn").html("此账号已撸 10000 ROY");
-					$("#luroybtn").attr("disabled", true);
+				if (data["rows"][i]["id"] == name) {
+					$("#lushishicaibtn").html("此账号已撸0.1EOS");
+					$("#lushishicaibtn").attr("disabled", true);
 					break;
 				}
 			}
@@ -685,9 +684,7 @@ function checkluroy(name) {
 	})
 }
 
-function luchips() {
-	Dialog.init("由于合约帐号CHIPS不足，已暂停");
-	return;
+function lushishicai() {
 	if (loginflag == 0) {
 		Dialog.init("请先点击登录");
 		return;
@@ -703,8 +700,8 @@ function luchips() {
 			sign: true
 		};
 
-		eos.contract('efinitychips', options).then(contract => {
-			contract.claim(account.name, "eosgametoken", options).then(function (tx) {
+		eos.contract('eosio.token', options).then(contract => {
+			contract.transfer(account.name, "eosplaybrand", "0.1000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
 				Dialog.init('Success!');
 				//getaccountinfo(account.name);
 			}).catch(function (e) {
