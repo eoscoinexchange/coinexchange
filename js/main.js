@@ -810,7 +810,7 @@ function luseven() {
 
 function ludice() {
 	if (tp.isConnected() == true) {
-		var curaccount = g_curwallet;
+		var curaccount = g_curtpwallet;
 		var contract = "betdicetoken";
 		var action = "signup";
 		var paramdata = "owner:"+curaccount+",quantity:1000.0000 DICE";
