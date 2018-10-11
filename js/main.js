@@ -746,33 +746,18 @@ function luwizbox() {
 function lushishicai() {
 	// Dialog.init("已暂停");
 	// return;
-
 	if (tp.isConnected() == true) {
 		var curaccount = g_curtpwallet;
-		var contract = "eosio.token";
-		var action = "transfer";
-		var paramdata = '';
-		var paramname = '';
-		var paramval = '';
-		paramname = "from";
-		paramval = curaccount;
-		paramdata += '"' + paramname + '":"' + paramval + '",';
-		paramname = "to";
-		paramval = "eosplaybrand";
-		paramdata += '"' + paramname + '":"' + paramval + '"';
-		paramname = "quantity";
-		paramval = "0.3000 EOS";
-		paramdata += '"' + paramname + '":"' + paramval + '"';
-		paramname = "memo";
-		paramval = "dice:o2@wayunggogogo";
-		paramdata += '"' + paramname + '":"' + paramval + '"';
-
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
-		var params = JSON.parse(actionstr);
-		tp.pushEosAction(params).then(data => {
-			if (data["result"] == true) {
-				Dialog.init('Success!');
-			}
+		tp.eosTokenTransfer({
+			from: curaccount,
+			to: 'eosplaybrand',
+			amount: '0.3000',
+			tokenName: 'EOS',
+			precision: 4,
+			contract: 'eosio.token',
+			memo: "dice:o2@wayunggogogo",
+		}).then(function (data) {
+			//Dialog.init('Success!');
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -826,9 +811,7 @@ function luseven() {
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
-			if (data["result"] == true) {
-				Dialog.init('Success!');
-			}
+			//Dialog.init('Success!');
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -880,9 +863,7 @@ function ludice() {
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
-			if (data["result"] == true) {
-				Dialog.init('Success!');
-			}
+			//Dialog.init('Success!');
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -936,9 +917,7 @@ function lumev() {
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
-			if (data["result"] == true) {
-				Dialog.init('Success!');
-			}
+			//Dialog.init('Success!');
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
