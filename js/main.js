@@ -692,7 +692,8 @@ function scatterLogin() {
 }
 
 function checkshishicai(name) {
-	var flag = 0;
+	$("#lushishicaibtn").html("GET 0.1 EOS");
+	$("#lushishicaibtn").removeAttr('disabled');
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
@@ -700,7 +701,6 @@ function checkshishicai(name) {
 				if (data["rows"][i]["id"] == name) {
 					$("#lushishicaibtn").html("此账号已撸0.1EOS");
 					$("#lushishicaibtn").attr("disabled", true);
-					flag = 1;
 					break;
 				}
 			}
@@ -708,12 +708,6 @@ function checkshishicai(name) {
 			console.log(error);
 		}
 	})
-
-	if(flag == 0)
-	{
-		$("#lushishicaibtn").html("GET 0.1 EOS");
-		$("#lushishicaibtn").removeAttr('disabled');
-	}
 }
 
 function luwizbox() {
