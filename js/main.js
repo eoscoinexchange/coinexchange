@@ -37,6 +37,7 @@ function gettpwalletlist() {
 				$accountlistid.append(new Option(accountname, accountname));
 				if (i == 0) {
 					g_curtpwallet = accountname;
+					checkshishicai(g_curtpwallet);
 				}
 			}
 		})
@@ -45,6 +46,7 @@ function gettpwalletlist() {
 
 function tpwalletlistchange(obj) {
 	g_curtpwallet = $(obj).val();
+	checkshishicai(g_curtpwallet);
 }
 
 function getaccountinfo(accountname) {
@@ -690,6 +692,7 @@ function scatterLogin() {
 }
 
 function checkshishicai(name) {
+	var flag = 0;
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
@@ -697,6 +700,7 @@ function checkshishicai(name) {
 				if (data["rows"][i]["id"] == name) {
 					$("#lushishicaibtn").html("此账号已撸0.1EOS");
 					$("#lushishicaibtn").attr("disabled", true);
+					flag = 1;
 					break;
 				}
 			}
@@ -704,6 +708,12 @@ function checkshishicai(name) {
 			console.log(error);
 		}
 	})
+
+	if(flag == 0)
+	{
+		$("#lushishicaibtn").html("GET 0.1 EOS");
+		$("#lushishicaibtn").removeAttr('disabled');
+	}
 }
 
 function luwizbox() {
@@ -756,6 +766,7 @@ function lushishicai() {
 			memo: "dice:o2@wayunggogogo",
 		}).then(function (data) {
 			//Dialog.init('Success!');
+			checkshishicai(curaccount);
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
