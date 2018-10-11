@@ -828,7 +828,7 @@ function ludice() {
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
-			if(data["result"] == 'true')
+			if(data["result"] == true)
 			{
 				Dialog.init('Success!');
 			}
