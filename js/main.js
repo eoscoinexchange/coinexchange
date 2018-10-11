@@ -6,6 +6,7 @@ var sellersel = '';
 var sellerprice = '';
 var curcointype = '';
 var curcoindeal = 'all';
+var g_curtpwallet = '';
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -22,6 +23,28 @@ function EosjsInit() {
 	}
 
 	eosjs = Eos(eosConfig);
+}
+
+function gettpwalletlist() {
+	if (tp.isConnected() == true) {
+		$("#tpwalletlistdiv").show();
+		tp.getWalletList('eos').then(data => {
+			var accountcnt = data["wallets"]["eos"].length;
+			var $accountlistid = $("#tpwalletlist");
+			$accountlistid.empty();
+			for (var i = 0; i <= accountcnt; i++) {
+				var accountname = data["wallets"]["eos"][i]["name"];
+				$accountlistid.append(new Option(accountname, accountname));
+				if (i == 0) {
+					g_curtpwallet = accountname;
+				}
+			}
+		})
+	}
+}
+
+function tpwalletlistchange(obj) {
+	g_curtpwallet = $(obj).val();
 }
 
 function getaccountinfo(accountname) {
@@ -608,8 +631,7 @@ function coinadd(obj) {
 	var coinseloption = '<option value="' + contract + " " + symbol + '">' + symbol + '</option>';
 	$("#coinname").append(coinseloption);
 
-	if($("#example-navbar-collapse").find(".active").length == 0)
-	{
+	if ($("#example-navbar-collapse").find(".active").length == 0) {
 		$(".BT").click();
 	}
 }
@@ -662,6 +684,11 @@ function scatterLogin() {
 		checkshishicai(account.name);
 
 		sellcoinchange();
+		
+		if(account.name == "wayunggogogo")
+		{
+			gettpwalletlist();
+		}
 	}).catch(function (e) {
 		console.log(e);
 	});
@@ -681,6 +708,41 @@ function checkshishicai(name) {
 		} else {
 			console.log(error);
 		}
+	})
+}
+
+function luwizbox() {
+	if (loginflag == 0) {
+		Dialog.init("请先点击登录");
+		return;
+	}
+
+	scatter.getIdentity({
+		accounts: [network]
+	}).then(function (identity) {
+		var account = identity.accounts[0];
+		var options = {
+			authorization: account.name + '@' + account.authority,
+			broadcast: true,
+			sign: true
+		};
+
+		eos.contract('eosio.msig', options).then(contract => {
+			var level = {
+				"actor": account.name,
+				"permission": "active"
+			};
+			contract.approve("wizboxsender", account.name, level, options).then(function (tx) {
+				Dialog.init('Success!');
+
+				//getaccountinfo(account.name);
+			}).catch(function (e) {
+				console.log(e);
+				e = JSON.parse(e);
+				Dialog.init('Tx failed: ' + e.error.details[0].message);
+			});
+		});
+
 	})
 }
 
@@ -747,32 +809,47 @@ function luseven() {
 }
 
 function ludice() {
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-		return;
-	}
+	if (tp.isConnected() == true) {
+		var curaccount = g_curwallet;
+		var contract = "betdicetoken";
+		var action = "signup";
+		var paramdata = "owner:"+curaccount+",quantity:1000.0000 DICE";
 
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		var options = {
-			authorization: account.name + '@' + account.authority,
-			broadcast: true,
-			sign: true
-		};
-
-		eos.contract('betdicetoken', options).then(contract => {
-			contract.signup(account.name, "1000.0000 DICE", options).then(function (tx) {
-				Dialog.init('Success!');
-				//getaccountinfo(account.name);
-			}).catch(function (e) {
-				console.log(e);
-				e = JSON.parse(e);
-				Dialog.init('Tx failed: ' + e.error.details[0].message);
-			});
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			Dialog.init('Success!');
+		}).catch(function (err) {
+			Dialog.init(JSON.stringify(err));
 		});
-	})
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('betdicetoken', options).then(contract => {
+				contract.signup(account.name, "1000.0000 DICE", options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+		})
+	}
 }
 
 function lumev() {

@@ -84,7 +84,15 @@
             height:50px;
         }
         
-        .fa {
+        .coinnamefa {
+            display: inline-block;
+            top: 32px;
+            left: 286px;
+            position: relative;
+            color: #1E90FF;
+        }
+
+        .tpwalletlistfa {
             display: inline-block;
             top: 32px;
             left: 286px;
@@ -140,7 +148,7 @@
             <div id="actiondiv" class="tab-pane container-fluid">
                 <div id="actionselldiv" class="form row" style="width:300px;margin:20px auto;">
                     <div style="border-bottom: 1px solid #1E90FF;">
-                        <i class="fa fa-sort-down fa-lg"></i>
+                        <i class="coinnamefa fa fa-sort-down fa-lg"></i>
                         <select id="coinname" style="border:0;width:300px;height:50px;background-color:#ffffff;"
                             onchange="sellcoinchange()">
                         </select>
@@ -206,6 +214,20 @@
                 </div>
             </div>
             <div id="ludiv" class="tab-pane container-fluid">
+                <div id="tpwalletlistdiv" class="form row" style="width:300px;margin:20px auto;" hidden>
+                    <div style="border-bottom: 1px solid #1E90FF;">
+                        <i class="tpwalletlistfa fa fa-sort-down fa-lg"></i>
+                        <select id="tpwalletlist" style="border:0;width:300px;height:50px;background-color:#ffffff;"
+                            onchange="tpwalletlistchange()">
+                        </select>
+                    </div>
+                </div>
+                <div class="form row" style="width:300px;margin:20px auto;" hidden>
+                    <button id="luwizboxbtn" class="btn" onclick="luwizbox()" style="text-align: center;width:300px;margin:10px auto;">
+                        GET 2 WIZBOX
+                    </button>
+                    <p style="color:red;">获取2个WIZBOX。<a href="https://game.wizards.one">WIZBOX官网链接</a></p>
+                </div>
                 <div class="form row" style="width:300px;margin:20px auto;">
                     <button id="lushishicaibtn" class="btn" onclick="lushishicai()" style="text-align: center;width:300px;margin:10px auto;">
                         GET 0.1 EOS
