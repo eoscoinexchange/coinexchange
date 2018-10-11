@@ -815,6 +815,16 @@ function ludice() {
 		var action = "signup";
 		var paramdata = "owner:"+curaccount+",quantity:1000.0000 DICE";
 
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "owner";
+		paramval = curaccount;
+		paramdata += '"'+paramname+'":"'+paramval+'",';
+		paramname = "quantity";
+		paramval = "1000.0000 DICE";
+		paramdata += '"'+paramname+'":"'+paramval+'"';
+
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
