@@ -684,11 +684,8 @@ function scatterLogin() {
 		checkshishicai(account.name);
 
 		sellcoinchange();
-		
-		if(account.name == "wayunggogogo")
-		{
-			gettpwalletlist();
-		}
+
+		gettpwalletlist();
 	}).catch(function (e) {
 		console.log(e);
 	});
@@ -747,65 +744,122 @@ function luwizbox() {
 }
 
 function lushishicai() {
-	Dialog.init("已暂停");
-	return;
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-		return;
-	}
+	// Dialog.init("已暂停");
+	// return;
 
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		var options = {
-			authorization: account.name + '@' + account.authority,
-			broadcast: true,
-			sign: true
-		};
+	if (tp.isConnected() == true) {
+		var curaccount = g_curtpwallet;
+		var contract = "eosio.token";
+		var action = "transfer";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "from";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "to";
+		paramval = "eosplaybrand";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+		paramname = "quantity";
+		paramval = "0.3000 EOS";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+		paramname = "memo";
+		paramval = "dice:o2@wayunggogogo";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		eos.contract('eosio.token', options).then(contract => {
-			contract.transfer(account.name, "eosplaybrand", "0.3000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			if (data["result"] == true) {
 				Dialog.init('Success!');
-				checkshishicai(account.name);
-				//getaccountinfo(account.name);
-			}).catch(function (e) {
-				console.log(e);
-				e = JSON.parse(e);
-				Dialog.init('Tx failed: ' + e.error.details[0].message);
-			});
+			}
+		}).catch(function (err) {
+			//Dialog.init(JSON.stringify(err));
 		});
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
 
-	})
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('eosio.token', options).then(contract => {
+				contract.transfer(account.name, "eosplaybrand", "0.3000 EOS", "dice:o2@wayunggogogo", options).then(function (tx) {
+					Dialog.init('Success!');
+					checkshishicai(account.name);
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+
+		})
+	}
 }
 
 function luseven() {
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-		return;
-	}
+	if (tp.isConnected() == true) {
+		var curaccount = g_curtpwallet;
+		var contract = "xxxsevensxxx";
+		var action = "signup";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "owner";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "quantity";
+		paramval = "10000.0000 SEVEN";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		var options = {
-			authorization: account.name + '@' + account.authority,
-			broadcast: true,
-			sign: true
-		};
-
-		eos.contract('xxxsevensxxx', options).then(contract => {
-			contract.signup(account.name, "10000.0000 SEVEN", options).then(function (tx) {
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			if (data["result"] == true) {
 				Dialog.init('Success!');
-				//getaccountinfo(account.name);
-			}).catch(function (e) {
-				console.log(e);
-				e = JSON.parse(e);
-				Dialog.init('Tx failed: ' + e.error.details[0].message);
-			});
+			}
+		}).catch(function (err) {
+			//Dialog.init(JSON.stringify(err));
 		});
-	})
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('xxxsevensxxx', options).then(contract => {
+				contract.signup(account.name, "10000.0000 SEVEN", options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+		})
+	}
 }
 
 function ludice() {
@@ -813,27 +867,24 @@ function ludice() {
 		var curaccount = g_curtpwallet;
 		var contract = "betdicetoken";
 		var action = "signup";
-		var paramdata = "owner:"+curaccount+",quantity:1000.0000 DICE";
-
 		var paramdata = '';
 		var paramname = '';
 		var paramval = '';
 		paramname = "owner";
 		paramval = curaccount;
-		paramdata += '"'+paramname+'":"'+paramval+'",';
+		paramdata += '"' + paramname + '":"' + paramval + '",';
 		paramname = "quantity";
 		paramval = "1000.0000 DICE";
-		paramdata += '"'+paramname+'":"'+paramval+'"';
+		paramdata += '"' + paramname + '":"' + paramval + '"';
 
 		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
-			if(data["result"] == true)
-			{
+			if (data["result"] == true) {
 				Dialog.init('Success!');
 			}
 		}).catch(function (err) {
-			Dialog.init(JSON.stringify(err));
+			//Dialog.init(JSON.stringify(err));
 		});
 	} else {
 		if (loginflag == 0) {
@@ -868,32 +919,57 @@ function ludice() {
 function lumev() {
 	Dialog.init("已暂停");
 	return;
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-		return;
-	}
+	if (tp.isConnected() == true) {
+		var curaccount = g_curtpwallet;
+		var contract = "eosvegasjack";
+		var action = "signup";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "from";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "memo";
+		paramval = "Get 100 MEV from coindex, https://eoscoinexchange.github.io/coinexchange";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		var options = {
-			authorization: account.name + '@' + account.authority,
-			broadcast: true,
-			sign: true
-		};
-
-		eos.contract('eosvegasjack', options).then(contract => {
-			contract.signup(account.name, "Get 100 MEV from coindex, https://eoscoinexchange.github.io/coinexchange", options).then(function (tx) {
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			if (data["result"] == true) {
 				Dialog.init('Success!');
-				//getaccountinfo(account.name);
-			}).catch(function (e) {
-				console.log(e);
-				e = JSON.parse(e);
-				Dialog.init('Tx failed: ' + e.error.details[0].message);
-			});
+			}
+		}).catch(function (err) {
+			//Dialog.init(JSON.stringify(err));
 		});
-	})
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('eosvegasjack', options).then(contract => {
+				contract.signup(account.name, "Get 100 MEV from coindex, https://eoscoinexchange.github.io/coinexchange", options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+		})
+	}
 }
 
 function gohome() {
