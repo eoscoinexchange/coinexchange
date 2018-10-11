@@ -681,7 +681,7 @@ function scatterLogin() {
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
-		checkshishicai(account.name);
+		//checkshishicai(account.name);
 
 		sellcoinchange();
 
@@ -773,8 +773,8 @@ function lushishicai() {
 			if (data["result"] == true) {
 				Dialog.init('Success!');
 			}
-		}).catch(function (err) {
-			//Dialog.init(JSON.stringify(err));
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
 	} else {
 		if (loginflag == 0) {
@@ -829,8 +829,8 @@ function luseven() {
 			if (data["result"] == true) {
 				Dialog.init('Success!');
 			}
-		}).catch(function (err) {
-			//Dialog.init(JSON.stringify(err));
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
 	} else {
 		if (loginflag == 0) {
@@ -883,8 +883,8 @@ function ludice() {
 			if (data["result"] == true) {
 				Dialog.init('Success!');
 			}
-		}).catch(function (err) {
-			//Dialog.init(JSON.stringify(err));
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
 	} else {
 		if (loginflag == 0) {
@@ -939,8 +939,8 @@ function lumev() {
 			if (data["result"] == true) {
 				Dialog.init('Success!');
 			}
-		}).catch(function (err) {
-			//Dialog.init(JSON.stringify(err));
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
 	} else {
 		if (loginflag == 0) {
