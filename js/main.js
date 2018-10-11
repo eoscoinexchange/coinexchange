@@ -681,11 +681,9 @@ function scatterLogin() {
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
 
-		//checkshishicai(account.name);
+		checkshishicai(account.name);
 
 		sellcoinchange();
-
-		gettpwalletlist();
 	}).catch(function (e) {
 		console.log(e);
 	});
@@ -744,8 +742,8 @@ function luwizbox() {
 }
 
 function lushishicai() {
-	// Dialog.init("已暂停");
-	// return;
+	Dialog.init("已暂停");
+	return;
 	if (tp.isConnected() == true) {
 		var curaccount = g_curtpwallet;
 		tp.eosTokenTransfer({
@@ -971,6 +969,8 @@ $(function () {
 		scatter = window.scatter;
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
+
+	gettpwalletlist();
 
 	getcoinlist();
 	setInterval(getsellerlist, 1000);
