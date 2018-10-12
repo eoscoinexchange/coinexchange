@@ -771,8 +771,8 @@ function luwizbox() {
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 		paramname = "level";
 		paramval = {
-			"actor": curaccount,
-			"permission": "active"
+			actor: curaccount,
+			permission: "active"
 		};
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
