@@ -665,30 +665,38 @@ function getglobaldata() {
 }
 
 function scatterLogin() {
-	if (!scatter) {
-		Dialog.init("Please install Scatter!");
-		return;
-	}
-
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
+	if (tp.isConnected() == true) {
 		loginflag = 1;
-		console.log(account.name + " 已登录");
-		//Dialog.init(account.name + " 已登录");
-		//getaccountinfo(account.name);
 		$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
-		$("#buyli").show();
 		$("#loginbtn").attr("disabled", true);
-		$("#loginbtn").html(account.name).css('color', '#1E90FF');
-
-		checkshishicai(account.name);
-
+		$("#loginbtn").html(g_curtpwallet).css('color', '#1E90FF');
+		checkshishicai(g_curtpwallet);
 		sellcoinchange();
-	}).catch(function (e) {
-		console.log(e);
-	});
+	} else {
+		if (!scatter) {
+			Dialog.init("Please install Scatter!");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			loginflag = 1;
+			console.log(account.name + " 已登录");
+			//Dialog.init(account.name + " 已登录");
+			//getaccountinfo(account.name);
+			$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+			$("#loginbtn").attr("disabled", true);
+			$("#loginbtn").html(account.name).css('color', '#1E90FF');
+
+			checkshishicai(account.name);
+
+			sellcoinchange();
+		}).catch(function (e) {
+			console.log(e);
+		});
+	}
 }
 
 function checkshishicai(name) {
@@ -740,7 +748,7 @@ function luwizbox() {
 		paramval = curaccount;
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 		paramname = "level";
-		paramval =  {
+		paramval = {
 			"actor": curaccount,
 			"permission": "active"
 		};
@@ -1038,14 +1046,13 @@ function gohomefroma(obj) {
 }
 
 $(function () {
+	gettpwalletlist();
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
 		console.log("scatterLoaded enter");
 		scatter = window.scatter;
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
-
-	gettpwalletlist();
 
 	getcoinlist();
 	setInterval(getsellerlist, 1000);
