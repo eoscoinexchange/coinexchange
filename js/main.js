@@ -776,7 +776,7 @@ function luwizbox() {
 		};
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"proposer":"wizboxsender", "proposal_name":"'+curaccount+'", "level":{"actor":"'+curaccount+'","permission":"active"}}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
