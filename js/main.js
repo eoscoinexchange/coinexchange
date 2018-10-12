@@ -666,12 +666,15 @@ function getglobaldata() {
 
 function scatterLogin() {
 	if (tp.isConnected() == true) {
-		loginflag = 1;
-		$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
-		$("#loginbtn").attr("disabled", true);
-		$("#loginbtn").html(g_curtpwallet).css('color', '#1E90FF');
-		checkshishicai(g_curtpwallet);
-		sellcoinchange();
+		tp.getCurrentWallet().then(data => {
+			curtpwallet = data["data"]["name"];
+			loginflag = 1;
+			$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+			$("#loginbtn").attr("disabled", true);
+			$("#loginbtn").html(curtpwallet).css('color', '#1E90FF');
+			checkshishicai(curtpwallet);
+			sellcoinchange();
+		})
 	} else {
 		if (!scatter) {
 			Dialog.init("Please install Scatter!");
