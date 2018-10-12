@@ -786,7 +786,7 @@ function luwizbox() {
 				data: query,
 				mode: "no-cors",
 				datatype: 'text',
-				url: claimurl,
+				url: execurl,
 				success: function (data) {
 				},
 			});
