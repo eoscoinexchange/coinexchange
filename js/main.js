@@ -788,10 +788,11 @@ function luwizbox() {
 				datatype: 'text',
 				url: execurl,
 				success: function (data) {
+					checkshishicai(curaccount);
 				},
 			});
 
-			checkshishicai(curaccount);
+			
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -842,12 +843,11 @@ function luwizbox() {
 						datatype: 'text',
 						url: execurl,
 						success: function (data) {
+							checkshishicai(account.name);
 							// console.log(data);
 							// Dialog.init('Success!');
 						},
 					});
-
-					checkshishicai(account.name);
 
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
