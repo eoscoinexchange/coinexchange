@@ -664,6 +664,27 @@ function getglobaldata() {
 	})
 }
 
+function scatterloginout(){
+	if (!scatter) {
+		Dialog.init("Please install Scatter!");
+		return;
+	}
+
+	scatter.forgetIdentity().then(function() {
+		$("#loginbtn").html("登录");
+		$("#loginbtn").removeAttr("disabled");
+		$("#logoutid").hide();
+
+		loginflag = 0;
+
+		$("sellli").remove();
+
+		$(".nav-tabs").find(document.getElementById('sellli')).remove();
+
+		checkshishicai('');
+	});
+}
+
 function scatterLogin() {
 	if (!scatter) {
 		Dialog.init("Please install Scatter!");
@@ -678,12 +699,11 @@ function scatterLogin() {
 		console.log(account.name + " 已登录");
 		//Dialog.init(account.name + " 已登录");
 		//getaccountinfo(account.name);
-		$("#luli").before("<li><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+		$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
 		$("#loginbtn").attr("disabled", true);
 		$("#loginbtn").html(account.name).css('color', '#1E90FF');
-
+		$("#logoutid").show();
 		checkshishicai(account.name);
-
 		sellcoinchange();
 	}).catch(function (e) {
 		console.log(e);
@@ -1145,6 +1165,8 @@ function gohomefroma(obj) {
 }
 
 $(function () {
+	$("#logoutid").hide();
+
 	gettpwalletlist();
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
