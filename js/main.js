@@ -711,38 +711,108 @@ function checkshishicai(name) {
 }
 
 function luwizbox() {
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-		return;
+
+	if (tp.isConnected() == true) {
+
+		var query = 'account=' + g_curtpwallet;
+
+		var claimurl = 'https://adb.wizards.one/claim';
+		$.ajax({
+			type: 'post',
+			data: query,
+			datatype: 'text',
+			url: claimurl,
+			success: function (data) {
+				console.log(data);
+				Dialog.init('Success!');
+			},
+		});
+		var curaccount = g_curtpwallet;
+		var contract = "eosio.msig";
+		var action = "approve";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "proposer";
+		paramval = "wizboxsender";
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "proposal_name";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+		paramname = "level";
+		paramval =  {
+			"actor": curaccount,
+			"permission": "active"
+		};
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			//Dialog.init('Success!');
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
+		});
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			var query = 'account=' + account.name;
+
+			var claimurl = 'https://adb.wizards.one/claim';
+			$.ajax({
+				type: 'post',
+				data: query,
+				datatype: 'text',
+				url: claimurl,
+				success: function (data) {
+					console.log(data);
+					Dialog.init('Success!');
+				},
+			});
+
+			eos.contract('eosio.msig', options).then(contract => {
+				var level = {
+					"actor": account.name,
+					"permission": "active"
+				};
+				contract.approve("wizboxsender", account.name, level, options).then(function (tx) {
+					Dialog.init('Success!');
+
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+
+		})
 	}
 
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		var options = {
-			authorization: account.name + '@' + account.authority,
-			broadcast: true,
-			sign: true
-		};
-
-		eos.contract('eosio.msig', options).then(contract => {
-			var level = {
-				"actor": account.name,
-				"permission": "active"
-			};
-			contract.approve("wizboxsender", account.name, level, options).then(function (tx) {
-				Dialog.init('Success!');
-
-				//getaccountinfo(account.name);
-			}).catch(function (e) {
-				console.log(e);
-				e = JSON.parse(e);
-				Dialog.init('Tx failed: ' + e.error.details[0].message);
-			});
-		});
-
-	})
+	var claimurl = 'https://adb.wizards.one/exec';
+	$.ajax({
+		type: 'post',
+		data: query,
+		datatype: 'text',
+		url: claimurl,
+		success: function (data) {
+			console.log(data);
+			Dialog.init('Success!');
+		},
+	});
 }
 
 function lushishicai() {
