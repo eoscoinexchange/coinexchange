@@ -695,6 +695,8 @@ function checkshishicai(name) {
 	$("#lushishicaibtn").removeAttr('disabled');
 	$("#luwizboxbtn").html("GET 2 WIZBOX");
 	$("#luwizboxbtn").removeAttr('disabled');
+	$("#luteabtn").html("GET 200 TEA");
+	$("#luteabtn").removeAttr('disabled');
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
@@ -704,6 +706,19 @@ function checkshishicai(name) {
 					$("#lushishicaibtn").attr("disabled", true);
 					break;
 				}
+			}
+		} else {
+			console.log(error);
+		}
+	})
+
+	eosjs.getTableRows(true, "linzongsheng", name, "accounts", "", 0, -1, 1, "i64", "1", function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			if(cnt != 0)
+			{
+				$("#luteabtn").html("此账号已撸200TEA");
+				$("#luteabtn").attr("disabled", true);
 			}
 		} else {
 			console.log(error);
