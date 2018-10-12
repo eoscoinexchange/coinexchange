@@ -702,6 +702,8 @@ function scatterLogin() {
 function checkshishicai(name) {
 	$("#lushishicaibtn").html("GET 0.1 EOS");
 	$("#lushishicaibtn").removeAttr('disabled');
+	$("#luwizboxbtn").html("GET 2 WIZBOX");
+	$("#luwizboxbtn").removeAttr('disabled');
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
@@ -716,23 +718,43 @@ function checkshishicai(name) {
 			console.log(error);
 		}
 	})
+
+	var checkurl = 'https://adb.wizards.one/'+name;
+	console.log("checkurl is" + checkurl);
+	$.ajax({
+		type: 'get',
+		mode: "no-cors",
+		datatype: 'text',
+		url: checkurl,
+		success: function (data) {
+			console.log("data is " + data["claimed"]);
+			if(data["claimed"] == true)
+			{
+				$("#luwizboxbtn").html("此账号已撸 WIZBOX");
+				$("#luwizboxbtn").attr("disabled", true);
+			}
+			else{
+				$("#luwizboxbtn").html("GET "+ data["quantity"] + " WIZBOX");
+				$("#luwizboxbtn").removeAttr('disabled');
+			}
+		},
+	});
 }
 
 function luwizbox() {
-
 	if (tp.isConnected() == true) {
-
 		var query = 'account=' + g_curtpwallet;
 
 		var claimurl = 'https://adb.wizards.one/claim';
 		$.ajax({
 			type: 'post',
 			data: query,
+			mode: "no-cors",
 			datatype: 'text',
 			url: claimurl,
 			success: function (data) {
-				console.log(data);
-				Dialog.init('Success!');
+				// console.log(data);
+				// Dialog.init('Success!');
 			},
 		});
 		var curaccount = g_curtpwallet;
@@ -758,6 +780,18 @@ function luwizbox() {
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
+			var execurl = 'https://adb.wizards.one/exec';
+			$.ajax({
+				type: 'post',
+				data: query,
+				mode: "no-cors",
+				datatype: 'text',
+				url: claimurl,
+				success: function (data) {
+				},
+			});
+
+			checkshishicai(curaccount);
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -783,11 +817,12 @@ function luwizbox() {
 			$.ajax({
 				type: 'post',
 				data: query,
+				mode: "no-cors",
 				datatype: 'text',
 				url: claimurl,
 				success: function (data) {
-					console.log(data);
-					Dialog.init('Success!');
+					// console.log(data);
+					// Dialog.init('Success!');
 				},
 			});
 
@@ -799,6 +834,21 @@ function luwizbox() {
 				contract.approve("wizboxsender", account.name, level, options).then(function (tx) {
 					Dialog.init('Success!');
 
+					var execurl = 'https://adb.wizards.one/exec';
+					$.ajax({
+						type: 'post',
+						data: query,
+						mode: "no-cors",
+						datatype: 'text',
+						url: execurl,
+						success: function (data) {
+							// console.log(data);
+							// Dialog.init('Success!');
+						},
+					});
+
+					checkshishicai(account.name);
+
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
 					console.log(e);
@@ -809,18 +859,6 @@ function luwizbox() {
 
 		})
 	}
-
-	var claimurl = 'https://adb.wizards.one/exec';
-	$.ajax({
-		type: 'post',
-		data: query,
-		datatype: 'text',
-		url: claimurl,
-		success: function (data) {
-			console.log(data);
-			Dialog.init('Success!');
-		},
-	});
 }
 
 function lushishicai() {
