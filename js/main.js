@@ -870,7 +870,7 @@ function lutea() {
 		paramval = curaccount;
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"'+curaccount+'", "quantity":"200.0000 TEA", "ram_payer":"'+curaccount+'"}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
