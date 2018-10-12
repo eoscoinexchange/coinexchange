@@ -852,6 +852,61 @@ function luwizbox() {
 	}
 }
 
+function lutea() {
+	if (tp.isConnected() == true) {
+		var curaccount = g_curtpwallet;
+		var contract = "linzongsheng";
+		var action = "signup";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "owner";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "quantity";
+		paramval = "200.0000 TEA";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+		paramname = "ram_payer";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{' + paramdata + '}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			//Dialog.init('Success!');
+		}).catch(function (e) {
+			Dialog.init('Tx failed: ' + e.error.details[0].message);
+		});
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('linzongsheng', options).then(contract => {
+				contract.signup(account.name, "0.0000 TEA", account.name, options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					Dialog.init('Tx failed: ' + e.error.details[0].message);
+				});
+			});
+		})
+	}
+}
+
 function lushishicai() {
 	Dialog.init("已暂停");
 	return;
