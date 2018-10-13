@@ -7,6 +7,7 @@ var sellerprice = '';
 var curcointype = '';
 var curcoindeal = 'all';
 var g_curtpwallet = '';
+var g_curliquideos = '';
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -52,20 +53,17 @@ function tpwalletlistchange(obj) {
 function getaccountinfo(accountname) {
 	eosjs.getAccount(accountname, function (error, data) {
 		if (error == null) {
-			var ram_quota = data["ram_quota"] / 1024.00;
-			ram_quota = ram_quota.toFixed(2);
-			var ram_usage = data["ram_usage"] / 1024.00;
-			ram_usage = ram_usage.toFixed(2);
-			var ram_per = (ram_usage / ram_quota) * 100;
-			ram_per = ram_per.toFixed(2);
-			var ram_text = ram_usage + "KB/" + ram_quota + "KB";
-			$("#circle").circleChart({
-				value: ram_per,
-				onDraw: function (el, circle) {
-					circle.text(ram_text);
-				}
-			});
-			$("#raminfo").text("占用:" + ram_per + "%");
+			// var ram_quota = data["ram_quota"] / 1024.00;
+			// ram_quota = ram_quota.toFixed(2);
+			// var ram_usage = data["ram_usage"] / 1024.00;
+			// ram_usage = ram_usage.toFixed(2);
+			// var ram_per = (ram_usage / ram_quota) * 100;
+			// ram_per = ram_per.toFixed(2);
+			// var ram_text = ram_usage + "KB/" + ram_quota + "KB";
+			
+			// $("#raminfo").text("占用:" + ram_per + "%");
+			$("#liquideos").text("余额:"+data["core_liquid_balance"]);
+			g_curliquideos = data["core_liquid_balance"].split(' ')[0];
 		} else {
 			Dialog.init(error);
 		}
@@ -277,6 +275,7 @@ function transferbuy() {
 				memo: sellersel,
 			}).then(function (data) {
 				//Dialog.init('Success!');
+				getaccountinfo($("#usernamea").html().split(' ')[0]);
 				sellcoinchange();
 			}).catch(function (err) {
 				Dialog.init(JSON.stringify(err));
@@ -295,6 +294,7 @@ function transferbuy() {
 				eos.contract('eosio.token', options).then(contract => {
 					contract.transfer(account.name, "cointotheeos", cointoeos.toFixed(4) + ' EOS', sellersel + " " + curcointype, options).then(function (tx) {
 						Dialog.init('Success!');
+						getaccountinfo(account.name);
 						sellcoinchange();
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
@@ -381,6 +381,19 @@ function checkbuycoin() {
 	var count = $("#buycoincntid").val();
 	if (!r.test(count)) {
 		Dialog.init("数量须为整数");
+		return -1;
+	}
+
+	var cointoeos = accMul($("#buycoincntid").val(), sellerprice);
+	if (cointoeos.toFixed(4) != cointoeos) {
+		if (cointoeos.toFixed(4) < cointoeos) {
+			cointoeos = cointoeos + 0.0001;
+		}
+	}
+
+	if(accMul(cointoeos.toFixed(4), 10000) > accMul(g_curliquideos, 10000))
+	{
+		Dialog.init("你的账户EOS余额不足");
 		return -1;
 	}
 }
@@ -697,6 +710,7 @@ function scatterLogin() {
 		$("#usernamea").html(account.name + ' <b class="caret"></b>').css('color', '#1E90FF');
 		$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
 		checkshishicai(account.name);
+		getaccountinfo(account.name);
 		sellcoinchange();
 	}).catch(function (e) {
 		console.log(e);
