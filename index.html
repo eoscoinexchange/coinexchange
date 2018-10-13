@@ -135,13 +135,21 @@
                         <!-- <li><a href="#contactdiv" data-toggle="tab" style="font-size: 19px;">联系</a></li> -->
                         <li><a href="#aboutdiv" data-toggle="tab" style="font-size: 19px;">关于</a></li>
                     </ul>
-                    <div class="navbar-form navbar-right" role="search">
+                    <div id="logindiv" class="navbar-form navbar-right" role="search">
                         <button type="btn" class="btn btn-default" onclick="scatterLogin()" id="loginbtn" style="display: inline-block;">
                             登录
-                        </button>
-                        
-                        <p id="logoutid" onclick="scatterloginout()" style="display: inline-block;font-size:12px;" class="fa fa-sign-out fa-lg">退出</p>
+                        </button> 
                     </div>
+                    <ul id="userinfoul" class="nav navbar-nav navbar-right" hidden>
+                        <li class="dropdown">
+                            <a id="usernamea" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                username <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" onclick="scatterloginout()">退出</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
 
             </div>

@@ -144,7 +144,7 @@ function SortTb(col, order) {
 function sellcoinchange() {
 	$("#sellcoincntid").attr("placeholder", "请输入想出售或收回的" + $("#coinname").val().split(' ')[1] + "数量");
 
-	eosjs.getTableRows(true, $("#coinname").val().split(' ')[0], $("#loginbtn").html(), "accounts", function (error, data) {
+	eosjs.getTableRows(true, $("#coinname").val().split(' ')[0], $("#usernamea").html().split(' ')[0], "accounts", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
 			if (cnt == 0) {
@@ -177,7 +177,7 @@ function transfersell() {
 
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
-				from: $("#loginbtn").html(),
+				from: $("#usernamea").html().split(' ')[0],
 				to: 'cointotheeos',
 				amount: $("#sellcoincntid").val() + '.0000',
 				tokenName: $("#coinname").val().split(' ')[1],
@@ -263,7 +263,7 @@ function transferbuy() {
 
 		if (tp.isConnected() == true && 0) {
 			tp.eosTokenTransfer({
-				from: $("#loginbtn").html(),
+				from: $("#usernamea").html().split(' ')[0],
 				to: 'cointotheeos',
 				amount: cointoeos.toFixed(4),
 				tokenName: 'EOS',
@@ -671,9 +671,8 @@ function scatterloginout(){
 	}
 
 	scatter.forgetIdentity().then(function() {
-		$("#loginbtn").html("登录");
-		$("#loginbtn").removeAttr("disabled");
-		$("#logoutid").hide();
+		$("#logindiv").show();
+		$("#userinfoul").hide();
 
 		loginflag = 0;
 
@@ -697,12 +696,11 @@ function scatterLogin() {
 		var account = identity.accounts[0];
 		loginflag = 1;
 		console.log(account.name + " 已登录");
-		//Dialog.init(account.name + " 已登录");
-		//getaccountinfo(account.name);
+
+		$("#logindiv").hide();
+		$("#userinfoul").show();
+		$("#usernamea").html(account.name+' <b class="caret"></b>').css('color', '#1E90FF');
 		$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
-		$("#loginbtn").attr("disabled", true);
-		$("#loginbtn").html(account.name).css('color', '#1E90FF');
-		$("#logoutid").show();
 		checkshishicai(account.name);
 		sellcoinchange();
 	}).catch(function (e) {
@@ -1165,8 +1163,6 @@ function gohomefroma(obj) {
 }
 
 $(function () {
-	$("#logoutid").hide();
-
 	gettpwalletlist();
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
