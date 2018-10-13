@@ -209,7 +209,9 @@ function transfersell() {
 					}).catch(function (e) {
 						console.log(e);
 						e = JSON.parse(e);
-						Dialog.init('Tx failed: ' + e.error.details[0].message);
+						if (e.error.details[0].message != "Invalid packed transaction") {
+							Dialog.init('Tx failed: ' + e.error.details[0].message);
+						}
 					});
 				});
 
@@ -240,7 +242,9 @@ function transfergetback(quant) {
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
 					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+					if (e.error.details[0].message != "Invalid packed transaction") {
+						Dialog.init('Tx failed: ' + e.error.details[0].message);
+					}
 				});
 			});
 
@@ -295,7 +299,9 @@ function transferbuy() {
 						//getaccountinfo(account.name);
 					}).catch(function (e) {
 						e = JSON.parse(e);
-						Dialog.init('Tx failed: ' + e.error.details[0].message);
+						if (e.error.details[0].message != "Invalid packed transaction") {
+							Dialog.init('Tx failed: ' + e.error.details[0].message);
+						}
 					});
 				});
 			})
@@ -697,10 +703,9 @@ function scatterLogin() {
 	});
 }
 
-function usertakeback(obj)
-{
+function usertakeback(obj) {
 	var $item = $(obj).parent().parent();
-	var quant = $item.find('td').eq(2).html()+'.0000 '+$item.find('td').eq(3).html();
+	var quant = $item.find('td').eq(2).html() + '.0000 ' + $item.find('td').eq(3).html();
 
 	transfergetback(quant);
 }
@@ -857,7 +862,9 @@ function luwizbox() {
 
 
 		}).catch(function (e) {
-			Dialog.init('Tx failed: ' + e.error.details[0].message);
+			if (e.error.details[0].message != "Invalid packed transaction") {
+				Dialog.init('Tx failed: ' + e.error.details[0].message);
+			}
 		});
 	} else {
 		if (loginflag == 0) {
@@ -916,7 +923,9 @@ function luwizbox() {
 				}).catch(function (e) {
 					console.log(e);
 					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+					if (e.error.details[0].message != "Invalid packed transaction") {
+						Dialog.init('Tx failed: ' + e.error.details[0].message);
+					}
 				});
 			});
 
@@ -947,7 +956,9 @@ function lutea() {
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
 		}).catch(function (e) {
-			Dialog.init('Tx failed: ' + e.error.details[0].message);
+			if (e.error.details[0].message != "Invalid packed transaction") {
+				Dialog.init('Tx failed: ' + e.error.details[0].message);
+			}
 		});
 	} else {
 		if (loginflag == 0) {
@@ -972,7 +983,9 @@ function lutea() {
 				}).catch(function (e) {
 					console.log(e);
 					e = JSON.parse(e);
-					Dialog.init('Tx failed: ' + e.error.details[0].message);
+					if (e.error.details[0].message != "Invalid packed transaction") {
+						Dialog.init('Tx failed: ' + e.error.details[0].message);
+					}
 				});
 			});
 		})
@@ -1202,11 +1215,11 @@ function gohomefroma(obj) {
 }
 
 $(function () {
-	$("#mainul").click(function(){
+	$("#mainul").click(function () {
 		$("#userinfoul").find('li').removeClass("active");
 	})
 
-	$("#userinfoul").click(function(){
+	$("#userinfoul").click(function () {
 		$("#mainul").find('li').removeClass("active");
 	})
 
