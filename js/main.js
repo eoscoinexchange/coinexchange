@@ -220,7 +220,7 @@ function transfersell() {
 	}
 }
 
-function transfergetback() {
+function transfergetback(quant) {
 	try {
 
 		scatter.getIdentity({
@@ -233,9 +233,10 @@ function transfergetback() {
 				sign: true
 			};
 			eos.contract('cointotheeos', options).then(contract => {
-				contract.takeback(account.name, $("#sellcoincntid").val() + '.0000 ' + $("#coinname").val().split(' ')[1], options).then(function (tx) {
+				contract.takeback(account.name, quant, options).then(function (tx) {
 					Dialog.init('Success!');
 					sellcoinchange();
+					getuserselllist();
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
 					e = JSON.parse(e);
@@ -321,18 +322,6 @@ function wantbuy(obj) {
 
 	$("#sellerlistid").hide();
 	$("#actionbuydiv").show();
-}
-
-function getback() {
-	if (loginflag == 0) {
-		Dialog.init("请先点击登录");
-	}
-
-	if (checksellcoin() == -1) {
-		return -1;
-	}
-
-	transfergetback();
 }
 
 function sell() {
@@ -664,13 +653,13 @@ function getglobaldata() {
 	})
 }
 
-function scatterloginout(){
+function scatterloginout() {
 	if (!scatter) {
 		Dialog.init("Please install Scatter!");
 		return;
 	}
 
-	scatter.forgetIdentity().then(function() {
+	scatter.forgetIdentity().then(function () {
 		$("#logindiv").show();
 		$("#userinfoul").hide();
 
@@ -699,13 +688,66 @@ function scatterLogin() {
 
 		$("#logindiv").hide();
 		$("#userinfoul").show();
-		$("#usernamea").html(account.name+' <b class="caret"></b>').css('color', '#1E90FF');
+		$("#usernamea").html(account.name + ' <b class="caret"></b>').css('color', '#1E90FF');
 		$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
 		checkshishicai(account.name);
 		sellcoinchange();
 	}).catch(function (e) {
 		console.log(e);
 	});
+}
+
+function usertakeback(obj)
+{
+	var $item = $(obj).parent().parent();
+	var quant = $item.find('td').eq(2).html()+'.0000 '+$item.find('td').eq(3).html();
+
+	transfergetback(quant);
+}
+
+function getuserselllist() {
+	$("#userselllisttablebody").empty();
+	var curusername = $("#usernamea").html().split(' ')[0];
+	console.log("getuserselllist username is " + curusername);
+	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 10000, function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			for (var i = 0; i < cnt; i++) {
+				var pkey = data["rows"][i]["pkey"];
+				eosjs.getTableRows(true, "cointotheeos", pkey, "sellerlist", "", 0, -1, 10000, function (error, selldata) {
+					if (error == null) {
+						var cnt = selldata["rows"].length;
+						for (var i = 0; i < cnt; i++) {
+							var obj = selldata["rows"][i];
+							if (obj["seller_account"] == curusername) {
+								var sellername = obj["seller_account"];
+								var sellerasset = obj["coin"];
+								var sellerprice = obj["price"];
+								var sellerassetarr = sellerasset.split('.');
+								var sellerassetaccount = sellerassetarr[0];
+								var sellerassetname = sellerassetarr[1].split(' ')[1];
+
+								var tdseller = "<td style='word-wrap:break-word;word-break:break-all;'>" + sellername + "</td>";
+								var tdprice = "<td><p >" + sellerprice + "</p></td>";
+								var tdcount = "<td>" + sellerassetaccount + "</td>";
+								var tdcoinname = "<td>" + sellerassetname + "</td>";
+								var tdbuy = "<td><button class='btn' onclick='usertakeback(this)'>撤单</button></td>";
+
+								var item = "<tr style='font-size:80%;' id='" + sellername + sellerassetname + "' class='update'>" + tdseller + tdprice + tdcount + tdcoinname + tdbuy + "</tr>";
+
+								$("#userselllisttablebody").append(item);
+							}
+						}
+					} else {
+						console.log(error);
+					}
+				})
+			}
+		} else {
+			console.log(error);
+		}
+	})
+
 }
 
 function checkshishicai(name) {
@@ -733,8 +775,7 @@ function checkshishicai(name) {
 	eosjs.getTableRows(true, "linzongsheng", name, "accounts", "", 0, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
-			if(cnt != 0)
-			{
+			if (cnt != 0) {
 				$("#luteabtn").html("此账号已撸200TEA");
 				$("#luteabtn").attr("disabled", true);
 			}
@@ -743,7 +784,7 @@ function checkshishicai(name) {
 		}
 	})
 
-	var checkurl = 'https://adb.wizards.one/'+name;
+	var checkurl = 'https://adb.wizards.one/' + name;
 	console.log("checkurl is" + checkurl);
 	$.ajax({
 		type: 'get',
@@ -752,13 +793,11 @@ function checkshishicai(name) {
 		url: checkurl,
 		success: function (data) {
 			console.log("data is " + data["claimed"]);
-			if(data["claimed"] == true)
-			{
+			if (data["claimed"] == true) {
 				$("#luwizboxbtn").html("此账号已撸 WIZBOX");
 				$("#luwizboxbtn").attr("disabled", true);
-			}
-			else{
-				$("#luwizboxbtn").html("GET "+ data["quantity"] + " WIZBOX");
+			} else {
+				$("#luwizboxbtn").html("GET " + data["quantity"] + " WIZBOX");
 				$("#luwizboxbtn").removeAttr('disabled');
 			}
 		},
@@ -800,7 +839,7 @@ function luwizbox() {
 		};
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"proposer":"wizboxsender", "proposal_name":"'+curaccount+'", "level":{"actor":"'+curaccount+'","permission":"active"}}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"proposer":"wizboxsender", "proposal_name":"' + curaccount + '", "level":{"actor":"' + curaccount + '","permission":"active"}}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
@@ -816,7 +855,7 @@ function luwizbox() {
 				},
 			});
 
-			
+
 		}).catch(function (e) {
 			Dialog.init('Tx failed: ' + e.error.details[0].message);
 		});
@@ -903,7 +942,7 @@ function lutea() {
 		paramval = curaccount;
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"'+curaccount+'", "quantity":"200.0000 TEA", "ram_payer":"'+curaccount+'"}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"200.0000 TEA", "ram_payer":"' + curaccount + '"}}]}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
@@ -1163,6 +1202,14 @@ function gohomefroma(obj) {
 }
 
 $(function () {
+	$("#mainul").click(function(){
+		$("#userinfoul").find('li').removeClass("active");
+	})
+
+	$("#userinfoul").click(function(){
+		$("#mainul").find('li').removeClass("active");
+	})
+
 	gettpwalletlist();
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
