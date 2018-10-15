@@ -8,6 +8,7 @@ var curcointype = '';
 var curcoindeal = 'all';
 var g_curtpwallet = '';
 var g_curliquideos = '';
+var getcoinsflag = 0;
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -60,9 +61,9 @@ function getaccountinfo(accountname) {
 			// var ram_per = (ram_usage / ram_quota) * 100;
 			// ram_per = ram_per.toFixed(2);
 			// var ram_text = ram_usage + "KB/" + ram_quota + "KB";
-			
+
 			// $("#raminfo").text("占用:" + ram_per + "%");
-			$("#liquideos").text("余额:"+data["core_liquid_balance"]);
+			$("#liquideos").text("余额:" + data["core_liquid_balance"]);
 			g_curliquideos = data["core_liquid_balance"].split(' ')[0];
 		} else {
 			Dialog.init(error);
@@ -391,8 +392,7 @@ function checkbuycoin() {
 		}
 	}
 
-	if(accMul(cointoeos.toFixed(4), 10000) > accMul(g_curliquideos, 10000))
-	{
+	if (accMul(cointoeos.toFixed(4), 10000) > accMul(g_curliquideos, 10000)) {
 		Dialog.init("你的账户EOS余额不足");
 		return -1;
 	}
@@ -647,16 +647,19 @@ function coinadd(obj) {
 }
 
 function getcoinlist() {
-	eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 10000, function (error, data) {
-		if (error == null) {
-			var cnt = data["rows"].length;
-			for (var i = 0; i < cnt; i++) {
-				coinadd(data["rows"][i]);
+	if (getcoinsflag == 0) {
+		eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 10000, function (error, data) {
+			if (error == null) {
+				var cnt = data["rows"].length;
+				for (var i = 0; i < cnt; i++) {
+					coinadd(data["rows"][i]);
+				}
+				getcoinsflag = 1;
+			} else {
+				console.log(error);
 			}
-		} else {
-			console.log(error);
-		}
-	})
+		})
+	}
 }
 
 function getglobaldata() {
@@ -1245,7 +1248,7 @@ $(function () {
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
 
-	getcoinlist();
+	setInterval(getcoinlist, 1000);
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 2000);
 	setInterval(getglobaldata, 3000);
