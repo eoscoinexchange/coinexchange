@@ -12,7 +12,7 @@ var getcoinsflag = 0;
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
-	host: 'api.eosnewyork.io',
+	host: 'openapi.eos.ren',
 	port: 443,
 	chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 };
@@ -20,7 +20,7 @@ var network = {
 function EosjsInit() {
 	var eosConfig = {
 		chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
-		httpEndpoint: 'https://api.eosnewyork.io',
+		httpEndpoint: 'https://openapi.eos.ren',
 		verbose: true
 	}
 
