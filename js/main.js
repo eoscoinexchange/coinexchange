@@ -676,12 +676,7 @@ function getglobaldata() {
 }
 
 function scatterloginout() {
-	if (!scatter) {
-		Dialog.init("Please install Scatter!");
-		return;
-	}
-
-	scatter.forgetIdentity().then(function () {
+	if (tp.isConnected() == true) {
 		$("#logindiv").show();
 		$("#userinfoul").hide();
 
@@ -692,32 +687,65 @@ function scatterloginout() {
 		$(".nav-tabs").find(document.getElementById('sellli')).remove();
 
 		checkshishicai('');
-	});
+	}
+	else{
+		if (!scatter) {
+			Dialog.init("Please install Scatter!");
+			return;
+		}
+
+		scatter.forgetIdentity().then(function () {
+			$("#logindiv").show();
+			$("#userinfoul").hide();
+
+			loginflag = 0;
+
+			$("sellli").remove();
+
+			$(".nav-tabs").find(document.getElementById('sellli')).remove();
+
+			checkshishicai('');
+		});
+	}
 }
 
 function scatterLogin() {
-	if (!scatter) {
-		Dialog.init("Please install Scatter!");
-		return;
+	if (tp.isConnected() == true) {
+		tp.getCurrentWallet().then(data => {
+			curtpwallet = data["data"]["name"];
+			loginflag = 1;
+			$("#logindiv").hide();
+			$("#userinfoul").show();
+			$("#usernamea").html(curtpwallet + ' <b class="caret"></b>').css('color', '#1E90FF');
+			$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+			checkshishicai(curtpwallet);
+			getaccountinfo(curtpwallet);
+			sellcoinchange();
+		})
+	} else {
+		if (!scatter) {
+			Dialog.init("Please install Scatter!");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			loginflag = 1;
+			console.log(account.name + " 已登录");
+
+			$("#logindiv").hide();
+			$("#userinfoul").show();
+			$("#usernamea").html(account.name + ' <b class="caret"></b>').css('color', '#1E90FF');
+			$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
+			checkshishicai(account.name);
+			getaccountinfo(account.name);
+			sellcoinchange();
+		}).catch(function (e) {
+			console.log(e);
+		});
 	}
-
-	scatter.getIdentity({
-		accounts: [network]
-	}).then(function (identity) {
-		var account = identity.accounts[0];
-		loginflag = 1;
-		console.log(account.name + " 已登录");
-
-		$("#logindiv").hide();
-		$("#userinfoul").show();
-		$("#usernamea").html(account.name + ' <b class="caret"></b>').css('color', '#1E90FF');
-		$("#luli").before("<li id='sellli'><a href='#actiondiv' data-toggle='tab' style='font-size: 19px;'>卖</a></li>");
-		checkshishicai(account.name);
-		getaccountinfo(account.name);
-		sellcoinchange();
-	}).catch(function (e) {
-		console.log(e);
-	});
 }
 
 function usertakeback(obj) {
