@@ -10,6 +10,7 @@ var g_curtpwallet = '';
 var g_curtpwalletaddress = '';
 var g_curliquideos = '';
 var getcoinsflag = 0;
+var getcoinsflagex = 0;
 var network = {
 	blockchain: 'eos',
 	protocol: 'https',
@@ -651,15 +652,24 @@ function coinadd(obj) {
 }
 
 function getcoinlist() {
+	if(getcoinsflagex == 1)
+	{
+		return;
+	}
+
+	getcoinsflagex = 1;
+
 	if (getcoinsflag == 0) {
 		eosjs.getTableRows(true, "cointotheeos", "cointotheeos", "coins", "", 0, -1, 10000, function (error, data) {
 			if (error == null) {
+				getcoinsflagex = 0;
+				getcoinsflag = 1;
 				var cnt = data["rows"].length;
 				for (var i = 0; i < cnt; i++) {
 					coinadd(data["rows"][i]);
 				}
-				getcoinsflag = 1;
 			} else {
+				getcoinsflagex = 0;
 				console.log(error);
 			}
 		})
@@ -1423,7 +1433,7 @@ $(function () {
 		eos = scatter.eos(network, Eos, {}, "https");
 	});
 
-	setInterval(getcoinlist, 1000);
+	setInterval(getcoinlist, 2000);
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 2000);
 	setInterval(getglobaldata, 3000);
