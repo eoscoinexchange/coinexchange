@@ -779,6 +779,8 @@ function checkshishicai(name) {
 	$("#luwizboxbtn").removeAttr('disabled');
 	$("#luteabtn").html("GET 200 TEA");
 	$("#luteabtn").removeAttr('disabled');
+	$("#lucubebtn").html("GET 1000 CUBE");
+	$("#lucubebtn").removeAttr('disabled');
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
 			var cnt = data["rows"].length;
@@ -800,6 +802,18 @@ function checkshishicai(name) {
 			if (cnt != 0) {
 				$("#luteabtn").html("此账号已撸200TEA");
 				$("#luteabtn").attr("disabled", true);
+			}
+		} else {
+			console.log(error);
+		}
+	})
+
+	eosjs.getTableRows(true, "eoscubetoken", name, "accounts", "", 0, -1, 1, "i64", "1", function (error, data) {
+		if (error == null) {
+			var cnt = data["rows"].length;
+			if (cnt != 0) {
+				$("#lucubebtn").html("此账号已撸1000CUBE");
+				$("#lucubebtn").attr("disabled", true);
 			}
 		} else {
 			console.log(error);
@@ -995,6 +1009,62 @@ function lutea() {
 
 			eos.contract('linzongsheng', options).then(contract => {
 				contract.signup(account.name, "0.0000 TEA", account.name, options).then(function (tx) {
+					Dialog.init('Success!');
+					//getaccountinfo(account.name);
+				}).catch(function (e) {
+					console.log(e);
+					e = JSON.parse(e);
+					if (e.error.details[0].message != "Invalid packed transaction") {
+						Dialog.init(e.error.details[0].message);
+					}
+				});
+			});
+		})
+	}
+}
+
+function lucube() {
+	if (tp.isConnected() == true) {
+		var curaccount = g_curtpwallet;
+		var contract = "eoscubetoken";
+		var action = "signup";
+		var paramdata = '';
+		var paramname = '';
+		var paramval = '';
+		paramname = "owner";
+		paramval = curaccount;
+		paramdata += '"' + paramname + '":"' + paramval + '",';
+		paramname = "quantity";
+		paramval = "1000.0000 CUBE";
+		paramdata += '"' + paramname + '":"' + paramval + '"';
+
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"0.0000 CUBE"}}]}';
+		var params = JSON.parse(actionstr);
+		tp.pushEosAction(params).then(data => {
+			//Dialog.init('Success!');
+		}).catch(function (e) {
+			if (e.error.details[0].message != "Invalid packed transaction") {
+				Dialog.init(e.error.details[0].message);
+			}
+		});
+	} else {
+		if (loginflag == 0) {
+			Dialog.init("请先点击登录");
+			return;
+		}
+
+		scatter.getIdentity({
+			accounts: [network]
+		}).then(function (identity) {
+			var account = identity.accounts[0];
+			var options = {
+				authorization: account.name + '@' + account.authority,
+				broadcast: true,
+				sign: true
+			};
+
+			eos.contract('eoscubetoken', options).then(contract => {
+				contract.signup(account.name, "0.0000 CUBE", options).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
