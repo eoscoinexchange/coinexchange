@@ -823,7 +823,7 @@ function checkshishicai(name) {
 	$("#luteabtn").removeAttr('disabled');
 	$("#lucubebtn").html("GET 1000 CUBE");
 	$("#lucubebtn").removeAttr('disabled');
-	$("#luenbbtn").html("GET 1000 ENB");
+	$("#luenbbtn").html("GET 1000 ENB 价值0.2EOS");
 	$("#luenbbtn").removeAttr('disabled');
 	eosjs.getTableRows(true, "eosplaybrand", "eosplaybrand", "user", "", name, -1, 1, "i64", "1", function (error, data) {
 		if (error == null) {
