@@ -7,6 +7,7 @@ var sellerprice = '';
 var curcointype = '';
 var curcoindeal = 'all';
 var g_curtpwallet = '';
+var g_curtpwalletaddress = '';
 var g_curliquideos = '';
 var getcoinsflag = 0;
 var network = {
@@ -36,9 +37,11 @@ function gettpwalletlist() {
 			$accountlistid.empty();
 			for (var i = 0; i <= accountcnt; i++) {
 				var accountname = data["wallets"]["eos"][i]["name"];
-				$accountlistid.append(new Option(accountname, accountname));
+				var address = data["wallets"]["eos"][i]["address"];
+				$accountlistid.append(new Option(accountname, accountname+' '+address));
 				if (i == 0) {
 					g_curtpwallet = accountname;
+					g_curtpwalletaddress = address;
 					checkshishicai(g_curtpwallet);
 				}
 			}
@@ -47,7 +50,8 @@ function gettpwalletlist() {
 }
 
 function tpwalletlistchange(obj) {
-	g_curtpwallet = $(obj).val();
+	g_curtpwallet = $(obj).val().split(' ')[0];
+	g_curtpwalletaddress = $(obj).val().split(' ')[1];
 	checkshishicai(g_curtpwallet);
 }
 
@@ -903,7 +907,7 @@ function luwizbox() {
 		};
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"proposer":"wizboxsender", "proposal_name":"' + curaccount + '", "level":{"actor":"' + curaccount + '","permission":"active"}}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"proposer":"wizboxsender", "proposal_name":"' + curaccount + '", "level":{"actor":"' + curaccount + '","permission":"active"}}}], "address":"'+g_curtpwalletaddress+'", "account":"'+curaccount+'"}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
@@ -1010,7 +1014,7 @@ function lutea() {
 		paramval = curaccount;
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"200.0000 TEA", "ram_payer":"' + curaccount + '"}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"200.0000 TEA", "ram_payer":"' + curaccount + '"}}], "address":"'+g_curtpwalletaddress+'", "account":"'+curaccount+'"}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
@@ -1066,7 +1070,7 @@ function lucube() {
 		paramval = "1000.0000 CUBE";
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"0.0000 CUBE"}}]}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"0.0000 CUBE"}}], "address":"'+g_curtpwalletaddress+'", "account":"'+curaccount+'"}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
