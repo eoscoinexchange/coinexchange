@@ -1097,7 +1097,7 @@ function luenb() {
 		paramval = curaccount;
 		paramdata += '"' + paramname + '":"' + paramval + '"';
 
-		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"0.0000 ENB", "ram_payer":"' + curaccount + '"}}], "address":"'+g_curtpwalletaddress+'", "account":"'+curaccount+'"}';
+		var actionstr = '{"actions":[{"account":"' + contract + '","name":"' + action + '","authorization":[{"actor":"' + curaccount + '","permission":"active"}],"data":{"owner":"' + curaccount + '", "quantity":"1000.0001 ENB", "ram_payer":"' + curaccount + '"}}], "address":"'+g_curtpwalletaddress+'", "account":"'+curaccount+'"}';
 		var params = JSON.parse(actionstr);
 		tp.pushEosAction(params).then(data => {
 			//Dialog.init('Success!');
@@ -1123,7 +1123,7 @@ function luenb() {
 			};
 
 			eos.contract('eosenbpocket', options).then(contract => {
-				contract.signup(account.name, "0.0000 ENB", account.name, options).then(function (tx) {
+				contract.signup(account.name, "1000.0001 ENB", account.name, options).then(function (tx) {
 					Dialog.init('Success!');
 					//getaccountinfo(account.name);
 				}).catch(function (e) {
