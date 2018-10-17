@@ -1425,7 +1425,6 @@ $(function () {
 		$("#mainul").find('li').removeClass("active");
 	})
 
-	gettpwalletlist();
 	EosjsInit();
 	document.addEventListener('scatterLoaded', function (scatterExtension) {
 		console.log("scatterLoaded enter");
@@ -1437,4 +1436,6 @@ $(function () {
 	setInterval(getsellerlist, 1000);
 	setInterval(getdeallist, 2000);
 	setInterval(getglobaldata, 3000);
+
+	gettpwalletlist();
 })
