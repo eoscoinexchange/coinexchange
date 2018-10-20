@@ -9,23 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scale=no">
     <title>CoinDex</title>
     <link rel="shortcut icon" href="favicon.ico">
-    <link href="../dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/dialog.css" rel="stylesheet">
+    <link href="css/jquery-ui.min.css" rel="stylesheet">
     <script src="js/jquery_2.1.0.min.js"></script>
     <script src="js/include.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
     <script src="js/tp.js"></script>
     <script src="js/buffer.js"></script>
     <script src="js/eos.min.js"></script>
     <script src="js/mDialogMin.js"></script>
     <style>
-        #actiondiv {
-            width: 100%;
-        }
-
-        #tablediv {
+        #exchangediv {
             width: 100%;
         }
 
@@ -33,40 +30,11 @@
             text-align: center;
         }
 
-        #tablediv table tbody td {
-       
+        table tbody td {
             width: 50px;
             text-align: center;
         }
-
-        #userselllisttablebody td {
-            text-align: center;
-        }
-
-        /* td:nth-child(1) {
-            text-align: center;
-        }
-
-        td:nth-child(2) {
-            text-align: center;
-        }
-
-        td:nth-child(3) {
-            text-align: center;
-        }
-
-        td:nth-child(4) {
-            text-align: center;
-        }
-
-        td:nth-child(5) {
-            text-align: center;
-        }
-
-        td:nth-child(6) {
-            text-align: center;
-        } */
-
+        
         #login {
             float: right;
         }
@@ -87,14 +55,6 @@
         input {
             height:50px;
         }
-        
-        .coinnamefa {
-            display: inline-block;
-            top: 32px;
-            left: 286px;
-            position: relative;
-            color: #1E90FF;
-        }
 
         .tpwalletlistfa {
             display: inline-block;
@@ -103,15 +63,31 @@
             position: relative;
             color: #1E90FF;
         }
+
+        .full-width-tabs > ul.nav.nav-tabs {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+        .full-width-tabs > ul.nav.nav-tabs > li {
+            float: none;
+            display: table-cell;
+        }
+        .full-width-tabs > ul.nav.nav-tabs > li > a {
+            text-align: center;
+        }
+        .take-all-space-you-can{
+            width:100%;
+        }
     </style>
 </head>
 
 <body style="overflow-x:hidden">
     <div hidden>
-        <a href="https://eoscoindex.cn">你访问的这个是旧网址，新网址为：www.eoscoindex.cn</a>
+        系统升级中，稍后恢复，敬请谅解
     </div>
     <div>
-        <nav id="headdiv" class="navbar navbar-default" role="navigation">
+        <nav id="headdiv" class="navbar navbar-default" role="navigation" style="margin:0 auto;">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
@@ -126,17 +102,15 @@
                 </div>
                 <div class="collapse navbar-collapse" id="example-navbar-collapse">
                     <ul id="mainul" class="nav navbar-nav nav-tabs">
-                        <!-- <li><a href="#actiondiv" data-toggle="tab" style="font-size: 19px;">卖</a></li> -->
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 19px;">
-                                买 <b class="caret"></b>
+                                交易 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu" id="tokenul">
                             </ul>
                         </li>
                         <li id="luli"><a href="#ludiv" data-toggle="tab" style="font-size: 19px;">撸</a></li>
                         <li id="dealli"><a href="#deallistdiv" data-toggle="tab" style="font-size: 19px;">成交记录</a></li>
-                        <!-- <li><a href="#contactdiv" data-toggle="tab" style="font-size: 19px;">联系</a></li> -->
                         <li><a href="#aboutdiv" data-toggle="tab" style="font-size: 19px;">关于</a></li>
                     </ul>
                     <div id="logindiv" class="navbar-form navbar-right" role="search">
@@ -150,7 +124,8 @@
                                 username <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#userselllistdiv" data-toggle="tab" onclick="getuserselllist()">我的卖单</a></li>
+                                <li><a href="#usersellorderlistdiv" data-toggle="tab" onclick="getuserorderlist(0)">我的卖单</a></li>
+                                <li><a href="#userbuyorderlistdiv" data-toggle="tab" onclick="getuserorderlist(1)">我的买单</a></li>
                                 <li><a href="#" onclick="scatterloginout()">退出</a></li>
                             </ul>
                         </li>
@@ -160,70 +135,102 @@
             </div>
         </nav>
         <div class="tab-content">
-            <div id="actiondiv" class="tab-pane container-fluid">
-                <div id="actionselldiv" class="form row" style="width:300px;margin:20px auto;">
-                    <div style="border-bottom: 1px solid #1E90FF;">
-                        <i class="coinnamefa fa fa-sort-down fa-lg"></i>
-                        <select id="coinname" style="border:0;width:300px;height:50px;background-color:#ffffff;"
-                            onchange="sellcoinchange()">
-                        </select>
+            <div id="exchangediv" class="tab-pane container-fluid active">
+                <div id="exchangelistid" class="form row" style="margin:0 auto;">
+                    <div class="tabbable full-width-tabs">
+                        <ul class="nav nav-tabs">
+                            <li class="take-all-space-you-can active" id=""><a href="#exchangesellerlistdiv"data-toggle="tab" style="font-size: 19px;">买</a></li>
+                            <li class="take-all-space-you-can" id=""><a href="#exchangebuyerlistdiv" data-toggle="tab" style="font-size: 19px;">卖</a></li>
+                            <li class="take-all-space-you-can" id=""><a href="#exchangepushorderdiv" data-toggle="tab" style="font-size: 19px;">挂单</a></li>
+                        </ul>
                     </div>
-                    <div style="border-bottom: 1px solid #1E90FF;">
-                        <input id="sellcoincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
-                            placeholder="请输入想出售或收回的ITECOIN数量" onchange="checksellcoin()">
-                        </input>
+                    <div class="tab-content">
+                        <div id="exchangesellerlistdiv" class="tab-pane container-fluid active">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>卖家</th>
+                                        <th>单价</th>
+                                        <th>数量</th>
+                                        <th>币种</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sellertablebody">
+                                </tbody>
+                            </table>
+                            <div id="nosellerinfodiv" class="form row" style="width:300px;margin:1px auto;" hidden>
+                                <p style="text-align: center;width:300px;margin:1px auto;font-style:italic; ">
+                                    暂无人挂单
+                                </p>
+                            </div>
+                        </div>
+                        <div id="exchangebuyerlistdiv" class="tab-pane container-fluid">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>买家</th>
+                                        <th>单价</th>
+                                        <th>数量</th>
+                                        <th>币种</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="buyertablebody">
+                                </tbody>
+                            </table>
+                            <div id="nobuyerinfodiv" class="form row" style="width:300px;margin:1px auto;" hidden>
+                                <p style="text-align: center;width:300px;margin:1px auto;font-style:italic; ">
+                                    暂无人挂单
+                                </p>
+                            </div>
+                        </div>
+                        <div id="exchangepushorderdiv" class="tab-pane container-fluid">
+                            <div class="form row" style="width:300px;margin:100px auto;">
+                                <button class="btn btn-danger" onclick="pushsellorder()" style="text-align: center;width:300px;margin:20px auto;">
+                                    我要卖
+                                </button>
+                                <button class="btn btn-success" onclick="pushbuyorder()" style="text-align: center;width:300px;margin:20px auto;">
+                                    我要买
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div style="border-bottom: 1px solid #1E90FF;">
-                        <input id="coinpriceid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
-                            placeholder="请输入出售单价，最小0.000001EOS" onchange="checkprice()">
-                        </input>
-                    </div>
-                    <div style="text-align: left;width:300px;margin:5px auto;">
-                        <p id="accounttoken">余额:</p>
-                    </div>
-                    <br />
-                    <button id="sellbtn" class="btn" onclick="sell()" style="text-align: center;width:300px;margin:10px auto;">
-                        卖
-                    </button>
-                    <br />
-                    <button id="gohomebtn" class="btn" onclick="gohome()" style="text-align: center;width:300px;margin:10px auto;">
-                        回到首页
-                    </button>
                 </div>
-            </div>
-            <div id="tablediv" class="tab-pane container-fluid active">
-                <div id="sellerlistid" class="form row">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>卖家</th>
-                                <th>单价</th>
-                                <th>数量</th>
-                                <th>币种</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sellertablebody">
-                        </tbody>
-                    </table>
+                <div id="exchangedialogform" class="form row">
+                    <form>
+                        <fieldset>
+                            <div style="border-bottom: 1px solid #1E90FF;">
+                                <input id="exchangecountinput" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                                    placeholder="请输入想购买的数量" onchange="checkexchangecount()" oninput="showexchangeinfo()">
+                                </input>
+                            </div>
+                            <div style="width:300px;margin:5px auto;">
+                                <p id="exchangeinfoeos" style="float:left;display:inline;">交易额:EOS</p>
+                                <p id="exchangeinfobalance" style="float:right;display:inline;">余额:EOS</p>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
-                <div id="actionbuydiv" class="form row" style="width:300px;margin:20px auto;" hidden>
-                    <div style="border-bottom: 1px solid #1E90FF;">
-                        <input id="buycoincntid" type="text" style="border:0;text-align: left;width:300px;outline:none;"
-                            placeholder="请输入想购买的BT数量" onchange="checkbuycoin(this)" oninput="calbuyneedeos()">
-                        </input>
-                    </div>
-                    <div style="text-align: left;width:300px;margin:5px auto;">
-                        <p id="accounteos" style="float:left;display:inline;">需支付:0.0000 EOS</p>
-                        <p id="liquideos" style="float:right;display:inline;">余额:</p>
-                    </div>
-                    <br />
-                    <button id="buybtn" class="btn" onclick="buy()" style="text-align: center;width:300px;margin:10px auto;">
-                        买
-                    </button>
-                    <button id="gohomebtn" class="btn" onclick="gohome()" style="text-align: center;width:300px;margin:10px auto;">
-                        回到首页
-                    </button>
+                <div id="pushorderform" class="form row" >
+                    <form>
+                        <fieldset>
+                            <div style="border-bottom: 1px solid #1E90FF;">
+                                <input id="pushordercount" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                                    placeholder="请输入想出售的数量" onchange="checkordercount()">
+                                </input>
+                            </div>
+                            <div style="border-bottom: 1px solid #1E90FF;">
+                                <input id="pushorderprice" type="text" style="border:0;text-align: left;width:300px;outline:none;"
+                                    placeholder="请输入出售单价，最小0.000001EOS" onchange="checkorderprice()" oninput="calcorderamount()">
+                                </input>
+                            </div>
+                            <div style="width:300px;margin:5px auto;">
+                                <p id="pushorderamount" style="float:left;display:inline;">交易额:EOS</p>
+                                <p id="pushorderbalance" style="float:right;display:inline;">余额:EOS</p>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
             <div id="ludiv" class="tab-pane container-fluid">
@@ -249,7 +256,7 @@
                 </div>
                 <div class="form row" style="width:300px;margin:20px auto;">
                     <button id="luenbbtn" class="btn" onclick="luenb()" style="text-align: center;width:300px;margin:10px auto;">
-                        GET 1000 ENB 价值0.2EOS
+                        GET 1000 ENB
                     </button>
                     <p style="color:red;">获取1000ENB 消耗0.22k内存,全部转账出去后，可恢复0.11k内存.</p>
                 </div>
@@ -264,24 +271,6 @@
                         GET 0.1 EOS
                     </button>
                     <p style="color:red;">首玩消耗3EOS，3%的概率会输掉3EOS，然后97%概率会赢3.1EOS，赚0.1EOS, 不消耗内存，请谨慎考虑！。<a href="https://eosplay.co/link/eosgametoken">EOSPLAY官网链接</a></p>
-                </div>
-                <div class="form row" style="width:300px;margin:20px auto;" hidden>
-                    <button id="ludicebtn" class="btn" onclick="ludice()" style="text-align: center;width:300px;margin:10px auto;">
-                        GET 1000DICE
-                    </button>
-                    <p style="color:red;">首次撸可得到1000 dice。<a href="https://betdice.one/?ref=eosgametoken">BetDice官网链接</a></p>
-                </div>
-                <div class="form row" style="width:300px;margin:20px auto;" hidden>
-                    <button id="lusevenbtn" class="btn" onclick="luseven()" style="text-align: center;width:300px;margin:10px auto;">
-                        GET 10000SEVEN
-                    </button>
-                    <p style="color:red;">首次撸可得到10000SEVEN，但需消耗0.22k内存。<a href="https://www.se7ens.io">SEVEN官网链接</a></p>
-                </div>
-                <div class="form row" style="width:300px;margin:20px auto;" hidden>
-                    <button id="lumevbtn" class="btn" onclick="lumev()" style="text-align: center;width:300px;margin:10px auto;">
-                        GET 100 MEV
-                    </button>
-                    <p style="color:red;">首次撸可得到100MEV，且不消耗内存。<a href="https://jacks.myeosvegas.com?ref=eosgametoken">MEV官网链接</a></p>
                 </div>
             </div>
             <div id="deallistdiv" class="tab-pane container-fluid">
@@ -311,7 +300,7 @@
                     </table>
                 </div>
             </div>
-            <div id="userselllistdiv" class="tab-pane container-fluid">
+            <div id="usersellorderlistdiv" class="tab-pane container-fluid">
                 <div class="form row">
                     <table class="table">
                         <thead>
@@ -323,14 +312,26 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="userselllisttablebody">
+                        <tbody id="usersellordertablebody">
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div id="contactdiv" class="tab-pane container-fluid">
-                <div class="form row" style="width:300px;margin:20px auto;">
-                    <img style="text-align: center;width:300px;margin:50px auto;" src="contactgroup20181006.jpeg" />
+            <div id="userbuyorderlistdiv" class="tab-pane container-fluid">
+                <div class="form row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>买家</th>
+                                <th>单价</th>
+                                <th>数量</th>
+                                <th>币种</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userbuyordertablebody">
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div id="aboutdiv" class="tab-pane container-fluid">
